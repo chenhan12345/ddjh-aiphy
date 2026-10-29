@@ -39,8 +39,8 @@ export class IslandUI {
       <!-- 頂部導航列 -->
       <header class="top-navbar">
         <div class="brand-section" id="btn-mascot-intro" title="點擊聆聽 Hank 老師導覽">
-          <div class="mascot-avatar-small" style="overflow: hidden; padding: 2px;">
-            <img src="hank_mascot.png" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%; border-radius: 50%;">
+          <div class="mascot-avatar-small" style="overflow: hidden; padding: 0; background: #ffffff; border: 2px solid var(--accent);">
+            <img src="hank_mascot.png?v=2.1" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
           </div>
           <div class="brand-text">
             <h1>大墩元素週期島 <span class="brand-badge">3D 課程群島</span></h1>
@@ -256,8 +256,8 @@ export class IslandUI {
             <button class="drawer-close-btn modal-close-btn">✕</button>
           </div>
           <div class="modal-body" style="text-align: center; padding: 24px;">
-            <div style="width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, rgba(44,109,181,0.15), rgba(242,179,61,0.25)); border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: var(--shadow-md); overflow: hidden;">
-              <img src="hank_mascot.png" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%;">
+            <div style="width: 120px; height: 120px; border-radius: 50%; background: #ffffff; border: 3.5px solid var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: var(--shadow-md); overflow: hidden; padding: 4px;">
+              <img src="hank_mascot.png?v=2.1" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
             <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 6px;">我是領航導師 Hank 老師</h4>
             <p style="font-size: 0.9rem; line-height: 1.6; color: var(--ink-secondary); margin-bottom: 16px;">
@@ -944,7 +944,7 @@ export class IslandUI {
       if (npcData.id === 'npc-center-01' || npcData.name.includes('Hank')) {
         avatarBadge.style.padding = '0';
         avatarBadge.style.overflow = 'hidden';
-        avatarBadge.innerHTML = '<img src="hank_mascot.png" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%; border-radius: 50%;">';
+        avatarBadge.innerHTML = '<img src="hank_mascot.png?v=2.1" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: contain; background: #ffffff; border-radius: 50%;">';
       } else {
         avatarBadge.textContent = '🧑‍🏫';
       }
@@ -1180,7 +1180,7 @@ export class IslandUI {
     // 繪製 Hank 老師手繪吉祥物
     if (!this.hankMascotImg) {
       this.hankMascotImg = new Image();
-      this.hankMascotImg.src = 'hank_mascot.png';
+      this.hankMascotImg.src = 'hank_mascot.png?v=2.1';
       this.hankMascotImg.onload = () => this.renderCertificate();
     } else if (this.hankMascotImg.complete && this.hankMascotImg.naturalWidth > 0) {
       ctx.drawImage(this.hankMascotImg, 485, 235, 78, 86);
