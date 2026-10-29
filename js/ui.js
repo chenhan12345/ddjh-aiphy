@@ -7,6 +7,7 @@ export class IslandUI {
   constructor(contentData, callbacks) {
     this.data = contentData;
     this.callbacks = callbacks; // onFlyToIsland, onDayNightChange, onThemeChange, onResetView, onAudioToggle, onReducedMotionToggle
+    this.options = callbacks;
 
     this.currentTheme = localStorage.getItem('ddjh_theme') || 'sky';
     this.currentDayNight = 'day';
@@ -73,6 +74,7 @@ export class IslandUI {
           </button>
           <button class="btn-icon" id="btn-bgm" title="播放微風背景音樂" aria-label="音樂開關">🎵</button>
           <button class="btn-icon" id="btn-reduced-motion" title="減少動態 / 暫停動畫" aria-label="減少動態">⏸️</button>
+          <button class="btn-icon" id="btn-quick-fly-hank" title="🚀 飛往巡島 Hank 老師身邊" aria-label="追蹤 Hank" style="background: rgba(245, 158, 11, 0.15); border: 1.5px solid var(--accent); color: var(--accent);">🚀</button>
           <button class="btn-icon" id="btn-reset-view" title="回到群島全景" aria-label="回到全景">🏠</button>
         </div>
       </header>
@@ -384,15 +386,25 @@ export class IslandUI {
       this.closeModal('modal-mascot');
     });
 
+    const triggerFlyToHank = () => {
+      this.closeModal('modal-mascot');
+      if (this.callbacks && this.callbacks.onFlyToHank) {
+        this.callbacks.onFlyToHank();
+        this.showToast('✈️ 視角正在飛往巡島 Hank 老師身邊！');
+      } else if (this.options && this.options.onFlyToHank) {
+        this.options.onFlyToHank();
+        this.showToast('✈️ 視角正在飛往巡島 Hank 老師身邊！');
+      }
+    };
+
     const btnMascotFly = document.getElementById('btn-mascot-fly');
     if (btnMascotFly) {
-      btnMascotFly.addEventListener('click', () => {
-        this.closeModal('modal-mascot');
-        if (this.options && this.options.onFlyToHank) {
-          this.options.onFlyToHank();
-          this.showToast('✈️ 視角正在飛往巡島 Hank 老師身邊！');
-        }
-      });
+      btnMascotFly.addEventListener('click', triggerFlyToHank);
+    }
+
+    const btnQuickFlyHank = document.getElementById('btn-quick-fly-hank');
+    if (btnQuickFlyHank) {
+      btnQuickFlyHank.addEventListener('click', triggerFlyToHank);
     }
 
     // 7. 音樂開關

@@ -265,6 +265,7 @@ class App {
 
   // 視角平滑飛近指定島嶼
   flyToIsland(islandId) {
+    this.isFollowingHank = false;
     this.activeIslandId = islandId;
     const pos = this.islandWorld.islandPositions[islandId];
     if (!pos) return;
@@ -280,14 +281,17 @@ class App {
   // 視角平滑飛近巡島 Hank 老師身邊
   flyToHank() {
     if (!this.livingWorld || !this.livingWorld.touringHank) return;
+    this.activeIslandId = null;
     const hPos = this.livingWorld.touringHank.group.position;
-    this.targetCamPos = hPos.clone().add(new THREE.Vector3(0, 16, 22));
+    this.targetCamPos = hPos.clone().add(new THREE.Vector3(0, 11, 15));
     this.targetControlsTarget = hPos.clone().setY(2.2);
     this.isFlying = true;
+    this.isFollowingHank = true;
   }
 
   // 回到群島總全景視角
   resetToOverview() {
+    this.isFollowingHank = false;
     this.activeIslandId = null;
     this.targetCamPos = this.overviewCamPos.clone();
     this.targetControlsTarget = this.overviewTarget.clone();
@@ -370,6 +374,7 @@ class App {
 
     // 畫布點擊偵測（拾取貝殼、居民對話、點島飛入）
     this.renderer.domElement.addEventListener('pointerdown', (e) => {
+      this.isFollowingHank = false;
       this.pointerDownX = e.clientX;
       this.pointerDownY = e.clientY;
     });
@@ -436,10 +441,16 @@ class App {
 
     // 視角飛行平滑過渡 (Camera smooth lerp)
     if (this.isFlying) {
+      if (this.isFollowingHank && this.livingWorld && this.livingWorld.touringHank) {
+        const hPos = this.livingWorld.touringHank.group.position;
+        this.targetCamPos.set(hPos.x, hPos.y + 11, hPos.z + 15);
+        this.targetControlsTarget.set(hPos.x, hPos.y + 2.0, hPos.z);
+      }
+
       this.camera.position.lerp(this.targetCamPos, 0.08);
       this.controls.target.lerp(this.targetControlsTarget, 0.08);
 
-      if (this.camera.position.distanceTo(this.targetCamPos) < 0.5) {
+      if (this.camera.position.distanceTo(this.targetCamPos) < 0.6) {
         this.camera.position.copy(this.targetCamPos);
         this.controls.target.copy(this.targetControlsTarget);
         this.isFlying = false;
