@@ -39,7 +39,9 @@ export class IslandUI {
       <!-- 頂部導航列 -->
       <header class="top-navbar">
         <div class="brand-section" id="btn-mascot-intro" title="點擊聆聽 Hank 老師導覽">
-          <div class="mascot-avatar-small">🧪</div>
+          <div class="mascot-avatar-small" style="overflow: hidden; padding: 2px;">
+            <img src="hank_mascot.png" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%; border-radius: 50%;">
+          </div>
           <div class="brand-text">
             <h1>大墩元素週期島 <span class="brand-badge">3D 課程群島</span></h1>
             <p class="brand-tagline">${this.data.site.tagline}</p>
@@ -254,8 +256,8 @@ export class IslandUI {
             <button class="drawer-close-btn modal-close-btn">✕</button>
           </div>
           <div class="modal-body" style="text-align: center; padding: 24px;">
-            <div style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); font-size: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: var(--shadow-md);">
-              👨‍🏫
+            <div style="width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, rgba(44,109,181,0.15), rgba(242,179,61,0.25)); border: 3px solid var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: var(--shadow-md); overflow: hidden;">
+              <img src="hank_mascot.png" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%;">
             </div>
             <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 6px;">我是領航導師 Hank 老師</h4>
             <p style="font-size: 0.9rem; line-height: 1.6; color: var(--ink-secondary); margin-bottom: 16px;">
@@ -937,6 +939,17 @@ export class IslandUI {
     document.getElementById('bubble-role').textContent = `${npcData.role} ‧ ${npcData.islandName}`;
     document.getElementById('bubble-quote').textContent = npcData.quotes[0];
 
+    const avatarBadge = document.getElementById('bubble-avatar');
+    if (avatarBadge) {
+      if (npcData.id === 'npc-center-01' || npcData.name.includes('Hank')) {
+        avatarBadge.style.padding = '0';
+        avatarBadge.style.overflow = 'hidden';
+        avatarBadge.innerHTML = '<img src="hank_mascot.png" alt="Hank 老師" style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%; border-radius: 50%;">';
+      } else {
+        avatarBadge.textContent = '🧑‍🏫';
+      }
+    }
+
     // 更新交易按鈕文字
     const tradeBtn = document.getElementById('bubble-trade-btn');
     if (npcData.trade) {
@@ -1163,6 +1176,15 @@ export class IslandUI {
     ctx.font = 'bold 12px "Microsoft JhengHei", sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('大墩核可', 420, 284);
+
+    // 繪製 Hank 老師手繪吉祥物
+    if (!this.hankMascotImg) {
+      this.hankMascotImg = new Image();
+      this.hankMascotImg.src = 'hank_mascot.png';
+      this.hankMascotImg.onload = () => this.renderCertificate();
+    } else if (this.hankMascotImg.complete && this.hankMascotImg.naturalWidth > 0) {
+      ctx.drawImage(this.hankMascotImg, 485, 235, 78, 86);
+    }
   }
 
   downloadCertificateImage() {
