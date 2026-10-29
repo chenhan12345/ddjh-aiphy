@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="sky">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>大墩元素週期島：從數位行政到理化實驗室</title>
+  <meta name="description" content="臺中市立大墩國中 3D 課程群島：結合校園數位資訊領航與自然科學探究的 3D 互動世界。">
+  <meta name="author" content="臺中市立大墩國中Teacher Hank">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+
+  <!-- Google Fonts: Noto Sans TC (display=swap 遵守 references/theme.md) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Three.js ES 模組 Import Map 宣告 (解析 OrbitControls 之 bare specifier "three") -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- 3D WebGL 畫布容器 -->
+  <div id="webgl-container"></div>
+
+  <!-- UI 互動界面根節點 -->
+  <div id="ui-root"></div>
+
+  <!-- 3D 應用程式主進入點 -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

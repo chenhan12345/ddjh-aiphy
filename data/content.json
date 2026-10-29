@@ -1,0 +1,837 @@
+{
+  "site": {
+    "title": "大墩元素週期島：從數位行政到理化實驗室",
+    "slug": "ddjh-aiphy",
+    "tagline": "結合校園數位資訊領航與自然科學探究的 3D 互動群島。",
+    "author": "臺中市立大墩國中Teacher Hank",
+    "contact": "https://forms.gle/XYvCw7dwr2A1WbtYA",
+    "audience": "國中學生與教職員",
+    "language": "zh-TW",
+    "publishMaterials": true,
+    "mascot": {
+      "name": "Hank",
+      "title": "理化實驗室領航導師",
+      "description": "穿著純白實驗衣與配戴金屬護目鏡的 Q 版理化老師，引領大家探索校園數位行政與科學奧秘！"
+    }
+  },
+  "themes": [
+    { "id": "sky", "name": "晴空", "background": "#eaf4fb", "default": true },
+    { "id": "cloud", "name": "雲朵", "background": "#f7f9fb", "default": false },
+    { "id": "starry", "name": "星夜", "background": "#121c2e", "default": false }
+  ],
+  "centerIsland": {
+    "id": "island-center",
+    "name": "AI元素週期島",
+    "role": "總複習島",
+    "group": "核心總部",
+    "intro": "總複習島：從各課題庫輪流抽題做跨課測驗，並顯示全部課程的學習進度與化學實驗結晶。",
+    "landmark": "發光元素週期巨碑＋Hank 圓頂理化實驗室＋旋轉原子核光軌",
+    "description": "群島的核心能量樞紐！結合了大墩國中數位行政的五大樞紐節點，並注入自然科學元素週期表的探究動能。完成各島學習後，在此進行總複習測驗並領取修業證書！"
+  },
+  "islands": [
+    {
+      "order": 1,
+      "id": "island-01",
+      "name": "教職員公務帳號同步島",
+      "group": "教職行政",
+      "intro": "搞懂教育局公務帳號，一次同步縣市單一簽入與校內 Wi-Fi",
+      "landmark": "教育局金鑰鐘樓與同步天線柱",
+      "points": [
+        "起始點：臺中市政府教育局服務網帳密",
+        "自動同步1：縣市帳號（教育體系單一簽入）",
+        "自動同步2：校內 Wi-Fi（tc-ddjh）帳號密碼",
+        "注意事項：本帳密與校務雲端系統、學校信箱、差勤系統無關"
+      ],
+      "extra": "清楚公務帳密連動機制，避免搞混差勤與校務雲端系統",
+      "link": "https://tc.edu.tw",
+      "material": "materials/公務帳號同步縣市帳號說明.png",
+      "detailedContent": [
+        {
+          "title": "📌 起始核心：臺中市政府教育局服務網",
+          "text": "教職員以『臺中市教育局服務網』之公務帳號密碼為基準起點。只要此處密碼更新，相關聯動服務便會自動串接同步。"
+        },
+        {
+          "title": "🔄 自動同步兩大系統",
+          "text": "1. 【縣市帳號】：教育部體系單一簽入服務，選擇『使用縣市帳號登入』即可直接通過驗證。\n2. 【校內 Wi-Fi (tc-ddjh)】：在校內連線 tc-ddjh 無線基地台，輸入相同的公務帳密即可高速上網。"
+        },
+        {
+          "title": "⚠️ 重要排障與觀念提醒（勿混淆！）",
+          "text": "此公務帳號密碼與以下三個系統完全『無關』，密碼不會連動修改：\n❌ 學生／教師雲端校務系統\n❌ 學校公務信箱 (@ddjh.tc.edu.tw)\n❌ 差勤排班打卡系統"
+        }
+      ],
+      "quiz": [
+        {
+          "id": "q1-1",
+          "question": "臺中市政府教育局服務網帳密更新時，會自動同步到下列哪一個系統？",
+          "options": [
+            { "id": "A", "text": "學校差勤打卡系統" },
+            { "id": "B", "text": "校內 Wi-Fi (tc-ddjh) 與縣市帳號單一簽入" },
+            { "id": "C", "text": "學校信箱 (@ddjh.tc.edu.tw)" },
+            { "id": "D", "text": "雲端校務成績系統" }
+          ],
+          "answer": "B",
+          "explanation": "依大墩國中規範，教育局服務網公務帳號密碼僅會同步至「縣市帳號」與「校內 Wi-Fi (tc-ddjh)」，與差勤、學校信箱及校務系統無關。"
+        },
+        {
+          "id": "q1-2",
+          "question": "若老師在校內想連線公務無線網路 tc-ddjh，應該輸入哪一組帳號密碼？",
+          "options": [
+            { "id": "A", "text": "身分證字號與生日" },
+            { "id": "B", "text": "雲端校務系統帳密" },
+            { "id": "C", "text": "臺中市政府教育局服務網帳密" },
+            { "id": "D", "text": "學校差勤系統帳號密碼" }
+          ],
+          "answer": "C",
+          "explanation": "校內 Wi-Fi (tc-ddjh) 的認證源即為教育局服務網帳密，兩者自動同步保持一致。"
+        },
+        {
+          "id": "q1-3",
+          "question": "小明老師修改了教育局服務網的密碼，請問差勤系統的密碼會變更嗎？",
+          "options": [
+            { "id": "A", "text": "會，差勤系統會於次日凌晨自動同步變更" },
+            { "id": "B", "text": "不會，差勤系統為獨立系統，與公務帳密無關" },
+            { "id": "C", "text": "會，但需要至人事室手動重新啟用" },
+            { "id": "D", "text": "只有在 Chrome 瀏覽器登入時才會變更" }
+          ],
+          "answer": "B",
+          "explanation": "差勤系統、學校信箱與校務系統皆為獨立認證，不隨教育局公務帳號連動。"
+        }
+      ],
+      "worksheet": [
+        {
+          "id": "w1-1",
+          "question": "【實務歸納】請簡述當新進教職員到校時，第一步應先向哪個系統建立公務帳號？並條列該帳密能直接連動的兩大服務。",
+          "placeholder": "寫下您的實務整理..."
+        },
+        {
+          "id": "w1-2",
+          "question": "【狀況題】若有同仁反映『修改了教育局密碼後，差勤打卡卻無法登入』，身為數位管理員你會如何向他說明與排解？",
+          "placeholder": "說明排障解法與系統架構差異..."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "id": "island-02",
+      "name": "校園 Wi-Fi 連線島",
+      "group": "校園網路",
+      "intro": "Android、iOS、Windows 與公用設備全平台無線連線指南",
+      "landmark": "雙頻高聳雷達天線塔與訊號基站",
+      "points": [
+        "Android：EAP 選 PEAP、階段二選 GTC、網域填 tc.edu.tw",
+        "iOS/Win：tc-ddjh 輸入公務帳號密碼",
+        "漫遊 eduroam：輸入帳號@tc.edu.tw 跨校漫遊",
+        "備用線路：新設備連不上可改連 2.4G（tc-ddjh-2.4g）",
+        "公用設備：平板電視專用 tc-ddjh-mac，預設密碼 ddjhwifi"
+      ],
+      "extra": "能依不同作業系統正確完成學校 Wi-Fi 驗證與排障",
+      "link": "https://ddjh.tc.edu.tw",
+      "material": "materials/wifi登入說明圖.png",
+      "detailedContent": [
+        {
+          "title": "📱 Android 裝置設定關鍵三要素",
+          "text": "Android 系統安全機制較嚴格，連線 tc-ddjh 時必須設定：\n• EAP 方法：請選擇【PEAP】\n• 階段二驗證：請選擇【GTC】\n• 網域 (Domain)：請填寫【tc.edu.tw】\n• CA 憑證：選『使用系統憑證』或『不進行驗證』。"
+        },
+        {
+          "title": "💻 iOS / iPadOS 與 Windows 筆電設定",
+          "text": "直接點選【tc-ddjh】，在彈出視窗輸入教育局公務帳號與密碼。首次連線若跳出憑證確認，請點選『信任』即可正常連線。"
+        },
+        {
+          "title": "🌐 跨校漫遊與特種設備專用 SSID",
+          "text": "• 【eduroam 全球漫遊】：帳號請輸入完整『公務帳號@tc.edu.tw』，即可在全臺各大專院校及中小學跨校漫遊。\n• 【備用 2.4G 線路】：若新設備或物聯網器材 5G 頻段抓不到，可切換【tc-ddjh-2.4g】。\n• 【公用大屏/電視專用】：【tc-ddjh-mac】，專用密碼為【ddjhwifi】。"
+        }
+      ],
+      "quiz": [
+        {
+          "id": "q2-1",
+          "question": "使用 Android 手機連線校園 tc-ddjh Wi-Fi 時，『階段二驗證 (Phase 2 authentication)』應選擇哪一項？",
+          "options": [
+            { "id": "A", "text": "MSCHAPV2" },
+            { "id": "B", "text": "GTC" },
+            { "id": "C", "text": "TLS" },
+            { "id": "D", "text": "PAP" }
+          ],
+          "answer": "B",
+          "explanation": "臺中市校園 Wi-Fi (tc-ddjh) 之 Android 端設定規範明確要求階段二驗證需選擇「GTC」，否則會持續顯示認證失敗。"
+        },
+        {
+          "id": "q2-2",
+          "question": "班級教學用的大型觸控電視或公共平板，應連線哪一個 SSID？其預設金鑰為何？",
+          "options": [
+            { "id": "A", "text": "tc-ddjh-public，密碼 12345678" },
+            { "id": "B", "text": "tc-ddjh-mac，密碼 ddjhwifi" },
+            { "id": "C", "text": "eduroam，密碼 tc.edu.tw" },
+            { "id": "D", "text": "tc-ddjh-free，免密碼" }
+          ],
+          "answer": "B",
+          "explanation": "依大墩校園 Wi-Fi 指南，大屏電視與公共設備專用 SSID 為 tc-ddjh-mac，預設密碼為 ddjhwifi。"
+        },
+        {
+          "id": "q2-3",
+          "question": "大墩國中老師至國立臺灣大學參加研習時，若要使用校際無線網路漫遊，帳號應如何填寫？",
+          "options": [
+            { "id": "A", "text": "僅填寫公務帳號即可" },
+            { "id": "B", "text": "公務帳號@tc.edu.tw" },
+            { "id": "C", "text": "身分證字號@ntu.edu.tw" },
+            { "id": "D", "text": "公務帳號@ddjh.tc.edu.tw" }
+          ],
+          "answer": "B",
+          "explanation": "跨校使用 eduroam 漫遊時，必須附帶臺中市教育局網域名稱後綴，格式為「帳號@tc.edu.tw」。"
+        }
+      ],
+      "worksheet": [
+        {
+          "id": "w2-1",
+          "question": "【跨平台連線檢核】請整理 Android、iOS 以及公共設備 (tc-ddjh-mac) 的三大設定要訣，製成一張 30 秒快速連線指南。",
+          "placeholder": "整理三平台重點..."
+        },
+        {
+          "id": "w2-2",
+          "question": "【排障經驗談】若有同學帶 Chromebook 或特殊平板到校無法連上 5GHz 網路，你會提供哪條備用連線給他？",
+          "placeholder": "寫出備用線路 SSID 與排除流程..."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "id": "island-03",
+      "name": "學生縣市帳號登入島",
+      "group": "學生帳號",
+      "intro": "教育部單一簽入五步驟，輕鬆登入各類數位學習平台",
+      "landmark": "五階登入彩虹拱門與南屯大墩碑",
+      "points": [
+        "步驟一二：點選單一簽入 ➔ 點選「使用縣市帳號登入」",
+        "步驟三四：選擇「臺中市」 ➔ 身分點選「學生登入」",
+        "步驟五：南屯區 ➔ 市立大墩國中193527 ➔ 輸入年班座號與密碼",
+        "帳號規則：年級(789)+班級(兩碼)+座號(兩碼)，如 90101"
+      ],
+      "extra": "能獨立依照格式輸入「學校代碼與年班座號」完成身分驗證",
+      "link": "https://oidc.tanet.edu.tw",
+      "material": "materials/縣市帳號登入說明.png",
+      "detailedContent": [
+        {
+          "title": "🌱 Step 1 & 2：認明小樹苗與縣市帳號",
+          "text": "進入各學習平台（如因材網、Cool English、學習拍）時：\n1. 點選【教育體系單一簽入服務】（認明綠色小樹苗圖章）。\n2. 點選紅色按鈕【使用縣市帳號登入】。"
+        },
+        {
+          "title": "🏙️ Step 3 & 4：選擇臺中市與學生身分",
+          "text": "3. 在縣市地圖選單中，點選橘色湖心亭圖章的【臺中市】。\n4. 在身分選擇頁面，務必點選右側藍色【學生登入】（左側為教職員請勿誤點）。"
+        },
+        {
+          "title": "🏫 Step 5：學校定位與帳密格式規範",
+          "text": "5. 行政區下拉選擇【南屯區】➔ 學校名稱選擇【市立大墩國中193527】。\n• 【帳號格式】：年級(7/8/9)＋班級(2碼)＋座號(2碼)。例如九年一班一號同學，請輸入【90101】。\n• 【預設密碼】：身分證字號後九碼。\n• 填入圖片驗證碼後，點擊『登入』即可成功通關！"
+        }
+      ],
+      "quiz": [
+        {
+          "id": "q3-1",
+          "question": "大墩國中八年五班七號的同學，在教育部單一簽入登入臺中市學生帳號時，帳號欄位應輸入？",
+          "options": [
+            { "id": "A", "text": "857" },
+            { "id": "B", "text": "80507" },
+            { "id": "C", "text": "19352780507" },
+            { "id": "D", "text": "ddjh80507" }
+          ],
+          "answer": "B",
+          "explanation": "帳號規則為年級(1碼)＋班級(2碼，不足補0)＋座號(2碼，不足補0)，故八年五班七號應輸入「80507」。"
+        },
+        {
+          "id": "q3-2",
+          "question": "在單一簽入流程的步驟五中，大墩國中的所屬行政區與學校完整代碼為？",
+          "options": [
+            { "id": "A", "text": "西屯區 ➔ 市立大墩國中" },
+            { "id": "B", "text": "南屯區 ➔ 市立大墩國中193527" },
+            { "id": "C", "text": "北屯區 ➔ 市立大墩國小" },
+            { "id": "D", "text": "南區 ➔ 市立大墩高中國中部" }
+          ],
+          "answer": "B",
+          "explanation": "大墩國中位於南屯區，於系統中的官方代碼為「市立大墩國中193527」。"
+        },
+        {
+          "id": "q3-3",
+          "question": "學生第一次使用縣市帳號登入時，預設的密碼通常為？",
+          "options": [
+            { "id": "A", "text": "出生年月日（YYYYMMDD）" },
+            { "id": "B", "text": "身分證字號『後九碼』" },
+            { "id": "C", "text": "學號 6 碼" },
+            { "id": "D", "text": "電話號碼後四碼" }
+          ],
+          "answer": "B",
+          "explanation": "臺中市大墩國中學生縣市帳號預設密碼為同學本人的「身分證字號後九碼」。"
+        }
+      ],
+      "worksheet": [
+        {
+          "id": "w3-1",
+          "question": "【帳號速算】請依規則寫出『七年十班十二號』同學的登入帳號，並說明班級與座號個位數時的補零原則。",
+          "placeholder": "寫出正確五碼帳號與補零規則..."
+        },
+        {
+          "id": "w3-2",
+          "question": "【步驟演練】請用自己的話，列出從學習平台首頁到進入系統的完整 5 步驟口訣，讓班上同學一聽就懂。",
+          "placeholder": "創作 5 步驟記憶口訣..."
+        }
+      ]
+    },
+    {
+      "order": 4,
+      "id": "island-04",
+      "name": "學生雲端校務帳密中樞島",
+      "group": "學生帳號",
+      "intro": "掌握大墩雲端校務密碼，自動同步縣市與 ST 學習帳號",
+      "landmark": "雲端水晶數據方塊大廈與同步光束",
+      "points": [
+        "起始點：大墩雲端校務（帳號：入學年度-學號；預設密碼：身分證後九碼）",
+        "自動同步1：縣市帳號密碼隨之同步",
+        "自動同步2：ST 學習帳號（@st.tc.edu.tw）密碼隨之同步",
+        "注意事項：校務系統改密碼，縣市與 ST 帳密會同步變更"
+      ],
+      "extra": "理解校務系統密碼修改後的聯動效果，掌握個人帳密規則",
+      "link": "https://school.tc.edu.tw/",
+      "material": "materials/學生雲端校務系統帳號同步說明.png",
+      "detailedContent": [
+        {
+          "title": "💎 學生雲端校務：個人數位生命線",
+          "text": "大墩國中雲端校務系統是每位同學在學成績、出缺勤與獎懲的核心中樞。\n• 【帳號格式】：入學年度-學號（例如：114-12345）。\n• 【預設密碼】：身分證字號後九碼。"
+        },
+        {
+          "title": "⚡ 密碼一鍵連動：三大系統同步共構",
+          "text": "校務系統為學生端的『唯一信任源』，密碼具有主動連動機制：\n1. 【縣市帳號】：年級班級座號 (如 80507) 的登入密碼隨之同步。\n2. 【ST 學習帳號】：Google 雲端帳號 (@st.tc.edu.tw) 的登入密碼隨之同步。"
+        },
+        {
+          "title": "🔔 關鍵觀念叮嚀",
+          "text": "※ 同學只要在『雲端校務系統』內修改了密碼，未來登入因材網的『縣市帳號』以及 Google Classroom 的『ST 學習帳號』，都必須使用這組『全新密碼』！若忘記密碼，也需回校務系統排解。"
+        }
+      ],
+      "quiz": [
+        {
+          "id": "q4-1",
+          "question": "學生若在『大墩雲端校務系統』中修改了個人密碼，下列何者為正確連動結果？",
+          "options": [
+            { "id": "A", "text": "只有校務系統變更，其他系統需分別手動修改" },
+            { "id": "B", "text": "「縣市帳號」與 Google「ST 學習帳號」的密碼會一併自動變更為新密碼" },
+            { "id": "C", "text": "ST 學習帳號會被系統自動註銷重置" },
+            { "id": "D", "text": "教育局服務網公務帳號會隨之變更" }
+          ],
+          "answer": "B",
+          "explanation": "雲端校務系統是學生帳密的中樞，在此修改密碼後，縣市帳號及 @st.tc.edu.tw 帳號密碼會自動連動同步更新。"
+        },
+        {
+          "id": "q4-2",
+          "question": "大墩國中學生登入雲端校務系統時，帳號之標準格式應為？",
+          "options": [
+            { "id": "A", "text": "身分證字號" },
+            { "id": "B", "text": "年級+班級+座號" },
+            { "id": "C", "text": "入學年度-學號（例如 114-xxxxx）" },
+            { "id": "D", "text": "英文姓名縮寫" }
+          ],
+          "answer": "C",
+          "explanation": "依大墩校務規範，雲端校務帳號為「入學年度-學號」（如 114-12345）。"
+        },
+        {
+          "id": "q4-3",
+          "question": "學生平時使用 Google Classroom 與 Google Drive 時使用的 ST 學習帳號，網域後綴為何？",
+          "options": [
+            { "id": "A", "text": "@gmail.com" },
+            { "id": "B", "text": "@st.tc.edu.tw" },
+            { "id": "C", "text": "@ddjh.tc.edu.tw" },
+            { "id": "D", "text": "@tc.edu.tw" }
+          ],
+          "answer": "B",
+          "explanation": "臺中市學生的官方 Google Workspace 學習帳號統一以後綴「@st.tc.edu.tw」結尾。"
+        }
+      ],
+      "worksheet": [
+        {
+          "id": "w4-1",
+          "question": "【連動地圖繪製】請用文字關係圖（如 A ➔ B），清楚呈現『雲端校務系統』、『縣市帳號』與『ST 學習帳號』之間的密碼同動架構。",
+          "placeholder": "繪製文字架構圖..."
+        },
+        {
+          "id": "w4-2",
+          "question": "【反思實務】為什麼學校要將三個不同平台的密碼設計成同步連動？這對同學上課與資安維護有什麼好處與注意事項？",
+          "placeholder": "寫下你的數位素養反思..."
+        }
+      ]
+    },
+    {
+      "order": 5,
+      "id": "island-05",
+      "name": "導師查詢學生帳密島",
+      "group": "教職行政",
+      "intro": "學生忘記密碼別慌張，導師 5 步驟快速查詢全班帳密",
+      "landmark": "星盤查詢觀測所（圓頂望遠鏡天文台）",
+      "points": [
+        "步驟 1 & 2：登入校務系統 ➔ 點選「教職員」",
+        "步驟 3：點選「導師作業」",
+        "步驟 4 & 5：點選上方「統計報表」 ➔ 點選「學生帳號密碼查詢」",
+        "可查資訊：一覽全班校務系統帳密與 ST 學習帳號密碼"
+      ],
+      "extra": "導師能利用校務系統後台獨立排解學生的數位登入問題",
+      "link": "https://school.tc.edu.tw/",
+      "material": "materials/導師查尋學生帳密說明.png",
+      "detailedContent": [
+        {
+          "title": "🔭 導師必備神技：課堂排障神隊友",
+          "text": "每當電腦課或線上施測時，總有同學驚慌忘記帳密。導師不必奔波資訊組，只要透過雲端校務後台即可 30 秒為全班查詢！"
+        },
+        {
+          "title": "📋 導師 5 步驟查詢秘笈",
+          "text": "• Step 1 & 2：打開大墩國中校務系統首頁，點選進入【教職員】專區並完成登入。\n• Step 3：在左側工作選單中，點選【導師作業】模組。\n• Step 4 & 5：在上方功能標籤切換至【統計報表】，接著點擊【學生帳號密碼查詢】。"
+        },
+        {
+          "title": "🔒 查詢結果與資安規範",
+          "text": "畫面將立即呈現全班名冊，包含：\n✓ 學生姓名、座號\n✓ 雲端校務系統帳號與當前密碼\n✓ @st.tc.edu.tw 學習帳號完整密碼\n※ 提醒導師：學生帳密屬個人敏感隱私，請個別私訊或遮蔽後提供，切勿將全班報表直接投影在公用大螢幕上！"
+        }
+      ],
+      "quiz": [
+        {
+          "id": "q5-1",
+          "question": "導師進入校務系統後，若要查詢全班學生的帳號密碼，應點選哪一個模組作業？",
+          "options": [
+            { "id": "A", "text": "教務註冊組作業" },
+            { "id": "B", "text": "導師作業" },
+            { "id": "C", "text": "總務設備管理" },
+            { "id": "D", "text": "輔導諮商紀錄" },
+            { "id": "E", "text": "人事差勤作業" }
+          ],
+          "answer": "B",
+          "explanation": "依系統架構，班級導師之學生帳密查詢功能內建於「導師作業」之「統計報表」分頁中。"
+        },
+        {
+          "id": "q5-2",
+          "question": "在「學生帳號密碼查詢」報表內，導師可以直接查到下列哪些資訊？",
+          "options": [
+            { "id": "A", "text": "學生的私人 Facebook 密碼" },
+            { "id": "B", "text": "校務系統帳密以及 @st.tc.edu.tw 學習帳號密碼" },
+            { "id": "C", "text": "家長教育局公務帳號" },
+            { "id": "D", "text": "學生健保卡卡號" }
+          ],
+          "answer": "B",
+          "explanation": "該報表可一覽全班每位同學的雲端校務帳密與 Google ST 學習帳號密碼，方便教學現場排障。"
+        },
+        {
+          "id": "q5-3",
+          "question": "當導師調閱出全班帳密報表協助學生時，下列何種做法最符合『資安與個人隱私保護』？",
+          "options": [
+            { "id": "A", "text": "將全班報表完整投影在黑板大螢幕上讓大家自己看" },
+            { "id": "B", "text": "單獨私下告知該位忘記密碼的同學，避免名冊外流" },
+            { "id": "C", "text": "列印成紙本貼在教室門口" },
+            { "id": "D", "text": "直接將全班帳密 PDF 傳送至班級家長 LINE 群組公開" }
+          ],
+          "answer": "B",
+          "explanation": "帳號密碼屬高度敏感個人隱私，導師應個別私下告知，絕不可公開投影或於群組外洩。"
+        }
+      ],
+      "worksheet": [
+        {
+          "id": "w5-1",
+          "question": "【行政 SOP】請寫下導師查詢學生帳密的完整路徑（5 步驟節點），並標示出最容易點錯的分頁按鈕位置。",
+          "placeholder": "整理 5 步驟路徑..."
+        },
+        {
+          "id": "w5-2",
+          "question": "【課堂情境演練】電腦課考試前 3 分鐘，有兩位同學同時舉手說密碼進不去，請規劃最快速且合乎隱私規範的 30 秒應變流程。",
+          "placeholder": "規劃 30 秒應變流程..."
+        }
+      ]
+    }
+  ],
+  "residents": [
+    {
+      "id": "npc-01",
+      "islandId": "island-01",
+      "name": "佩甄組長",
+      "role": "教務資訊組長",
+      "islandName": "教職員公務帳號同步島",
+      "color": "#3b82f6",
+      "quotes": [
+        "老師好！記得公務帳號修改密碼後，校內 Wi-Fi (tc-ddjh) 會自動同步喔！",
+        "差勤系統和學校信箱是完全獨立的，千萬別混在一起了～",
+        "如果你在校內連不上 tc-ddjh，請先確認公務服務網是否能正常登入！"
+      ],
+      "trade": {
+        "needs": "item-shell",
+        "needsCount": 1,
+        "gives": "item-keycard",
+        "givesCount": 1,
+        "hint": "給我 1 個 🐚 數位貝殼，我幫你開通 🔑 金鑰密碼卡！"
+      }
+    },
+    {
+      "id": "npc-02",
+      "islandId": "island-01",
+      "name": "志豪老師",
+      "role": "理化資深教師",
+      "islandName": "教職員公務帳號同步島",
+      "color": "#60a5fa",
+      "quotes": [
+        "剛帶完理化實驗！只要公務帳號通了，教育部單一簽入也暢行無阻。",
+        "準備做電解水實驗前，數位平板的網路連線也是關鍵前置步驟呢！",
+        "有任何同步問題，隨時問佩甄組長或我，我們是一同探索的好夥伴。"
+      ],
+      "trade": {
+        "needs": "item-shell",
+        "needsCount": 2,
+        "gives": "item-keycard",
+        "givesCount": 1,
+        "hint": "帶來 2 個 🐚 貝殼，也可以找我換備用 🔑 金鑰密碼卡喔。"
+      }
+    },
+    {
+      "id": "npc-03",
+      "islandId": "island-02",
+      "name": "冠宇同學",
+      "role": "校園網路達人",
+      "islandName": "校園 Wi-Fi 連線島",
+      "color": "#10b981",
+      "quotes": [
+        "Android 手機連線要記住關鍵密碼：PEAP、GTC 和 tc.edu.tw 網域！",
+        "如果教室後面訊號弱，記得還有 2.4G 備用頻道 tc-ddjh-2.4g 可以切換喔。",
+        "我的平板今天連線超級順暢，下載數位實驗教材只要三秒鐘！"
+      ],
+      "trade": {
+        "needs": "item-keycard",
+        "needsCount": 1,
+        "gives": "item-wifimeter",
+        "givesCount": 1,
+        "hint": "拿你的 🔑 金鑰密碼卡給我，我跟你交換專用 📶 無線信號儀！"
+      }
+    },
+    {
+      "id": "npc-04",
+      "islandId": "island-02",
+      "name": "婷婷助教",
+      "role": "智慧教室排障員",
+      "islandName": "校園 Wi-Fi 連線島",
+      "color": "#34d399",
+      "quotes": [
+        "黑板旁的觸控大螢幕和公用電視，要連 tc-ddjh-mac 才能無線投影喔！",
+        "記得公用 SSID 的專用密碼是 ddjhwifi，全部小寫沒有空格喔。",
+        "跨校研習要連 eduroam，帳號記得加上 @tc.edu.tw 才能通過全球漫遊認證。"
+      ],
+      "trade": {
+        "needs": "item-shell",
+        "needsCount": 3,
+        "gives": "item-wifimeter",
+        "givesCount": 1,
+        "hint": "蒐集 3 個 🐚 貝殼給我，也可以換到 📶 無線信號儀喔！"
+      }
+    },
+    {
+      "id": "npc-05",
+      "islandId": "island-03",
+      "name": "宥廷同學",
+      "role": "七年級新生班長",
+      "islandName": "學生縣市帳號登入島",
+      "color": "#f59e0b",
+      "quotes": [
+        "一開始我常把學校代碼打錯，現在我牢記市立大墩國中是 193527！",
+        "我是 7 年 1 班 3 號，所以我的登入帳號就是 70103，很好記吧！",
+        "選好臺中市後記得選藍色學生登入，不要像我以前手滑點到老師登入啦～"
+      ],
+      "trade": {
+        "needs": "item-wifimeter",
+        "needsCount": 1,
+        "gives": "item-seedling",
+        "givesCount": 1,
+        "hint": "用 📶 無線信號儀跟我交換象徵教育部單一簽入的 🌲 綠樹苗吧！"
+      }
+    },
+    {
+      "id": "npc-06",
+      "islandId": "island-03",
+      "name": "雅涵學姐",
+      "role": "數位資訊小志工",
+      "islandName": "學生縣市帳號登入島",
+      "color": "#fbbf24",
+      "quotes": [
+        "學弟妹如果班級是 3 班，記得前面要補 0 變成 03 喔！",
+        "登入單一簽入後，可以直接連到因材網和均一教育平台做理化練習題喔！",
+        "預設密碼是身分證後九碼，第一次登入成功記得要好好保管。"
+      ],
+      "trade": {
+        "needs": "item-shell",
+        "needsCount": 4,
+        "gives": "item-seedling",
+        "givesCount": 1,
+        "hint": "4 個 🐚 貝殼也能換到 🌲 單一簽入綠樹苗喔！"
+      }
+    },
+    {
+      "id": "npc-07",
+      "islandId": "island-04",
+      "name": "家豪學長",
+      "role": "校務系統小管家",
+      "islandName": "學生雲端校務帳密中樞島",
+      "color": "#8b5cf6",
+      "quotes": [
+        "雲端校務系統是我們的大腦！在這裡改密碼，縣市帳號和 ST 帳號會一併更新！",
+        "國小升上來的大墩新生，入學年度加上學號就是你專屬的校務帳號。",
+        "如果 Google Classroom 密碼忘記，只要回雲端校務確認密碼就對了。"
+      ],
+      "trade": {
+        "needs": "item-seedling",
+        "needsCount": 1,
+        "gives": "item-core",
+        "givesCount": 1,
+        "hint": "交出 🌲 綠樹苗，我將把充滿算力的 ⚡ 雲端中樞晶片交給你！"
+      }
+    },
+    {
+      "id": "npc-08",
+      "islandId": "island-04",
+      "name": "宜蓁同學",
+      "role": "自然科學習學藝",
+      "islandName": "學生雲端校務帳密中樞島",
+      "color": "#a78bfa",
+      "quotes": [
+        "我們的 ST 帳號格式是 @st.tc.edu.tw，做分組探究簡報少不了它！",
+        "剛剛老師在雲端校務上傳了元素週期表講義，我已經全部同步好了～",
+        "改了密碼要記在隨身手帳上，不要連續輸錯被系統鎖定喔。"
+      ],
+      "trade": {
+        "needs": "item-shell",
+        "needsCount": 5,
+        "gives": "item-core",
+        "givesCount": 1,
+        "hint": "用 5 個 🐚 貝殼也能兌換 ⚡ 雲端中樞晶片喔！"
+      }
+    },
+    {
+      "id": "npc-09",
+      "islandId": "island-05",
+      "name": "淑芬老師",
+      "role": "八年級資深導師",
+      "islandName": "導師查詢學生帳密島",
+      "color": "#ec4899",
+      "quotes": [
+        "每逢段考前夕，導師作業裡的『學生帳密查詢』是我最重要的百寶箱！",
+        "全班三十位同學的校務密碼和 ST 帳號，後台都能一目了然。",
+        "記得保護孩子們的個資，我都是私下把密碼小紙條交給忘記的同學。"
+      ],
+      "trade": {
+        "needs": "item-core",
+        "needsCount": 1,
+        "gives": "item-chart",
+        "givesCount": 1,
+        "hint": "以 ⚡ 雲端中樞晶片向我換取全班通行的 📋 全班通關星盤吧！"
+      }
+    },
+    {
+      "id": "npc-10",
+      "islandId": "island-05",
+      "name": "宗憲老師",
+      "role": "智慧班級導航員",
+      "islandName": "導師查詢學生帳密島",
+      "color": "#f472b6",
+      "quotes": [
+        "點選教職員 ➔ 導師作業 ➔ 統計報表 ➔ 學生帳密查詢，只要 5 秒鐘！",
+        "熟練這 5 個步驟，教室裡的數位障礙瞬間煙消雲散。",
+        "學生只要安心學習，帳號密碼的疑難雜症交給導師來排解！"
+      ],
+      "trade": {
+        "needs": "item-shell",
+        "needsCount": 6,
+        "gives": "item-chart",
+        "givesCount": 1,
+        "hint": "帶來 6 個 🐚 貝殼，老師也樂意贈送 📋 全班通關星盤！"
+      }
+    },
+    {
+      "id": "npc-center-01",
+      "islandId": "island-center",
+      "name": "Hank 老師",
+      "role": "理化實驗室領航導師（吉祥物）",
+      "islandName": "AI元素週期島",
+      "color": "#2563eb",
+      "quotes": [
+        "歡迎來到大墩元素週期島！從數位行政到理化實驗室，知識如原子般緊密相扣！",
+        "完成所有島嶼的隨堂測驗後，就可以來挑戰我出的【跨課總複習測驗】喔！",
+        "理化是探究宇宙真理的鑰匙，數位素養是暢行未來世界的通行證！",
+        "收集全套道具了嗎？快來中央市集兌換傳說中的【元素週期黃金燒瓶】吧！"
+      ],
+      "trade": {
+        "needs": "item-chart",
+        "needsCount": 1,
+        "gives": "item-flask",
+        "givesCount": 1,
+        "hint": "帶來 📋 全班通關星盤，我就為你灌注終極寶物 🧪 元素週期黃金燒瓶！"
+      }
+    },
+    {
+      "id": "npc-center-02",
+      "islandId": "island-center",
+      "name": "阿布商人",
+      "role": "中央市集奇珍商人",
+      "islandName": "AI元素週期島",
+      "color": "#ea580c",
+      "quotes": [
+        "走過路過不要錯過！大墩最稀有的數位科技奇珍都在我的攤位！",
+        "群島之間的送貨員每天都幫我運送各島的數位結晶呢～",
+        "夜幕降臨時，市集的小彩燈會亮起，景色格外夢幻喔！"
+      ],
+      "trade": {
+        "needs": "item-flask",
+        "needsCount": 1,
+        "gives": "item-postcard",
+        "givesCount": 1,
+        "hint": "出示 🧪 元素週期黃金燒瓶，將可獲得獨一無二的 💌 Hank 老師探索紀念明信片！"
+      }
+    }
+  ],
+  "trades": [
+    {
+      "id": "t-1",
+      "from": "item-shell",
+      "to": "item-keycard",
+      "npc": "佩甄組長",
+      "island": "教職員公務帳號同步島",
+      "desc": "以 1 個數位貝殼換取金鑰密碼卡"
+    },
+    {
+      "id": "t-2",
+      "from": "item-keycard",
+      "to": "item-wifimeter",
+      "npc": "冠宇同學",
+      "island": "校園 Wi-Fi 連線島",
+      "desc": "以金鑰密碼卡換取無線信號儀"
+    },
+    {
+      "id": "t-3",
+      "from": "item-wifimeter",
+      "to": "item-seedling",
+      "npc": "宥廷同學",
+      "island": "學生縣市帳號登入島",
+      "desc": "以無線信號儀換取單一簽入綠樹苗"
+    },
+    {
+      "id": "t-4",
+      "from": "item-seedling",
+      "to": "item-core",
+      "npc": "家豪學長",
+      "island": "學生雲端校務帳密中樞島",
+      "desc": "以單一簽入綠樹苗換取雲端中樞晶片"
+    },
+    {
+      "id": "t-5",
+      "from": "item-core",
+      "to": "item-chart",
+      "npc": "淑芬老師",
+      "island": "導師查詢學生帳密島",
+      "desc": "以雲端中樞晶片換取全班通關星盤"
+    },
+    {
+      "id": "t-6",
+      "from": "item-chart",
+      "to": "item-flask",
+      "npc": "Hank 老師",
+      "island": "AI元素週期島",
+      "desc": "以全班通關星盤換取元素週期黃金燒瓶"
+    },
+    {
+      "id": "t-7",
+      "from": "item-flask",
+      "to": "item-postcard",
+      "npc": "阿布商人",
+      "island": "AI元素週期島",
+      "desc": "以元素週期黃金燒瓶兌換 Hank 老師紀念明信片"
+    }
+  ],
+  "items": [
+    { "id": "item-shell", "name": "數位貝殼", "icon": "🐚", "desc": "在各島海灘拾取到的數位靈光結晶，是島民最喜愛的交易起點。" },
+    { "id": "item-keycard", "name": "金鑰密碼卡", "icon": "🔑", "desc": "教育局服務網公務金鑰，象徵校園行政的起點。" },
+    { "id": "item-wifimeter", "name": "無線信號儀", "icon": "📶", "desc": "能精準偵測 PEAP/GTC 訊號與跨校 eduroam 頻段的神奇儀器。" },
+    { "id": "item-seedling", "name": "單一簽入綠樹苗", "icon": "🌲", "desc": "教育部 TANet 象徵小樹苗，代表貫通全臺數位學習平台的能量。" },
+    { "id": "item-core", "name": "雲端中樞晶片", "icon": "⚡", "desc": "大墩校務雲端系統核心晶片，維繫縣市帳號與 ST 學習帳號的同動同步。" },
+    { "id": "item-chart", "name": "全班通關星盤", "icon": "📋", "desc": "導師作業統計報表秘傳寶盤，能指引迷惘同學找回個人數位足跡。" },
+    { "id": "item-flask", "name": "元素週期黃金燒瓶", "icon": "🧪", "desc": "融合理化實驗精神與數位行政晶粹的傳奇寶物！" },
+    { "id": "item-postcard", "name": "Hank 老師紀念明信片", "icon": "💌", "desc": "大墩元素週期島終極收藏成就！記錄你在群島探索的榮耀。" }
+  ],
+  "reviewQuiz": [
+    {
+      "id": "rq-1",
+      "sourceIsland": "island-01",
+      "sourceName": "教職員公務帳號同步島",
+      "question": "【公務同步觀念】若新進教師修改了「教育局服務網」密碼，下列何者不會跟著自動變更？",
+      "options": [
+        { "id": "A", "text": "校內 Wi-Fi (tc-ddjh) 登入密碼" },
+        { "id": "B", "text": "學校差勤打卡系統與學校信箱 (@ddjh.tc.edu.tw)" },
+        { "id": "C", "text": "教育體系單一簽入之縣市帳號登入密碼" },
+        { "id": "D", "text": "跨校漫遊 eduroam 驗證密碼" }
+      ],
+      "answer": "B",
+      "explanation": "教育局公務帳號僅自動同步至縣市帳號與校內 Wi-Fi (tc-ddjh)，差勤系統與學校信箱為獨立系統。"
+    },
+    {
+      "id": "rq-2",
+      "sourceIsland": "island-02",
+      "sourceName": "校園 Wi-Fi 連線島",
+      "question": "【全平台排障】Android 手機在連接大墩國中校內 Wi-Fi (tc-ddjh) 時，EAP 方法與階段二驗證應分別設定為？",
+      "options": [
+        { "id": "A", "text": "EAP：TLS ｜ 階段二：PAP" },
+        { "id": "B", "text": "EAP：PEAP ｜ 階段二：GTC" },
+        { "id": "C", "text": "EAP：PWD ｜ 階段二：MSCHAPV2" },
+        { "id": "D", "text": "EAP：SIM ｜ 階段二：無" }
+      ],
+      "answer": "B",
+      "explanation": "Android 系統必須選取 EAP: PEAP、階段二驗證: GTC，並填入網域 tc.edu.tw 方能成功連網。"
+    },
+    {
+      "id": "rq-3",
+      "sourceIsland": "island-03",
+      "sourceName": "學生縣市帳號登入島",
+      "question": "【單一簽入規範】九年八班三號的大墩同學，於臺中市學生登入頁面輸入之正確帳號為？",
+      "options": [
+        { "id": "A", "text": "983" },
+        { "id": "B", "text": "90803" },
+        { "id": "C", "text": "19352790803" },
+        { "id": "D", "text": "ddjh90803" }
+      ],
+      "answer": "B",
+      "explanation": "帳號規則為年級(9)＋班級兩碼(08)＋座號兩碼(03)，組合為「90803」。"
+    },
+    {
+      "id": "rq-4",
+      "sourceIsland": "island-04",
+      "sourceName": "學生雲端校務帳密中樞島",
+      "question": "【中樞連動機制】學生在「雲端校務系統」變更密碼後，下列哪一組帳號的密碼也會同時聯動更新？",
+      "options": [
+        { "id": "A", "text": "Google ST 學習帳號 (@st.tc.edu.tw) 與縣市帳號" },
+        { "id": "B", "text": "只有校務系統變更，其他皆不變" },
+        { "id": "C", "text": "教職員差勤系統" },
+        { "id": "D", "text": "校園 Wi-Fi tc-ddjh-mac" }
+      ],
+      "answer": "A",
+      "explanation": "校務系統為學生端唯一的密碼中樞，在此更換密碼將同步連動縣市帳號及 ST 學習帳號。"
+    },
+    {
+      "id": "rq-5",
+      "sourceIsland": "island-05",
+      "sourceName": "導師查詢學生帳密島",
+      "question": "【導師行政 SOP】導師登入校務系統後，欲調閱全班學生帳號密碼，其點選順序為何？",
+      "options": [
+        { "id": "A", "text": "教職員 ➔ 註冊組 ➔ 列印成績單" },
+        { "id": "B", "text": "教職員 ➔ 導師作業 ➔ 統計報表 ➔ 學生帳號密碼查詢" },
+        { "id": "C", "text": "學生專區 ➔ 忘記密碼申請" },
+        { "id": "D", "text": "差勤管理 ➔ 個人資料 ➔ 班級帳密" }
+      ],
+      "answer": "B",
+      "explanation": "路徑為：登入教職員 ➔ 點選「導師作業」 ➔ 切換上方「統計報表」 ➔ 點擊「學生帳號密碼查詢」。"
+    },
+    {
+      "id": "rq-6",
+      "sourceIsland": "island-center",
+      "sourceName": "AI元素週期島（跨域挑戰）",
+      "question": "【理化跨域探究】水分子 (H2O) 在進行電解實驗時，正極與負極產生的氣體分別為何？",
+      "options": [
+        { "id": "A", "text": "正極產生氧氣 (O2)，負極產生氫氣 (H2)，體積比約為 1:2" },
+        { "id": "B", "text": "正極產生氫氣 (H2)，負極產生氧氣 (O2)，體積比約為 2:1" },
+        { "id": "C", "text": "正極與負極皆產生二氧化碳 (CO2)" },
+        { "id": "D", "text": "正極產生氯氣 (Cl2)，負極產生氮氣 (N2)" }
+      ],
+      "answer": "A",
+      "explanation": "水電解實驗中「正氧負氫」，正極產生助燃的氧氣，負極產生可燃的氫氣，產生體積比約為 1:2。"
+    }
+  ]
+}
