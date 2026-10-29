@@ -420,6 +420,81 @@ export class IslandWorld {
         });
         break;
       }
+
+      case 'island-06': {
+        // 光影幻境探索島：七彩分光三稜鏡晶塔、旋轉折射光環與大理石光學實驗基座
+        const prismGroup = new THREE.Group();
+
+        // A. 白色圓形光學實驗台座
+        const pedestalGeo = new THREE.CylinderGeometry(2.8, 3.2, 1.6, 12);
+        const pedestal = new THREE.Mesh(pedestalGeo, this.materials.wallWhite);
+        pedestal.position.y = 0.8;
+        pedestal.castShadow = true;
+        prismGroup.add(pedestal);
+
+        // 台座上的金色光學刻度環
+        const dialGeo = new THREE.TorusGeometry(2.2, 0.1, 8, 24);
+        dialGeo.rotateX(Math.PI / 2);
+        const dialMesh = new THREE.Mesh(dialGeo, this.materials.gold);
+        dialMesh.position.y = 1.65;
+        prismGroup.add(dialMesh);
+
+        // B. 巨型透明光學三稜鏡 (Triangular Prism)
+        const prismGeo = new THREE.CylinderGeometry(1.6, 1.6, 3.8, 3);
+        const prismMat = new THREE.MeshPhysicalMaterial({
+          color: 0xe0f2fe,
+          transparent: true,
+          opacity: 0.85,
+          roughness: 0.05,
+          transmission: 0.9,
+          reflectivity: 0.9,
+          flatShading: true
+        });
+        const prismMesh = new THREE.Mesh(prismGeo, prismMat);
+        prismMesh.position.y = 3.8;
+        prismMesh.castShadow = true;
+        prismGroup.add(prismMesh);
+
+        // C. 圍繞三稜鏡的七彩光譜光環 (Rainbow Spectral Rings)
+        const rainbowColors = [0xef4444, 0xf97316, 0xeab308, 0x10b981, 0x06b6d4, 0x3b82f6, 0x8b5cf6];
+        const spectralRings = [];
+        rainbowColors.forEach((col, i) => {
+          const ringGeo = new THREE.TorusGeometry(2.5 + i * 0.28, 0.06, 6, 24);
+          ringGeo.rotateX(Math.PI / 2);
+          const ringMat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.85 });
+          const ring = new THREE.Mesh(ringGeo, ringMat);
+          ring.position.y = 3.2 + Math.sin(i * 0.8) * 0.4;
+          prismGroup.add(ring);
+          spectralRings.push({ mesh: ring, speed: (i % 2 === 0 ? 1 : -1) * (0.8 + i * 0.2) });
+        });
+
+        // D. 頂部懸浮折射聚光水晶 (Floating Focal Crystal)
+        const focalGeo = new THREE.OctahedronGeometry(1.0, 0);
+        const focalMat = new THREE.MeshStandardMaterial({
+          color: 0x38bdf8,
+          emissive: 0x0284c7,
+          emissiveIntensity: 0.6,
+          metalness: 0.8,
+          roughness: 0.1
+        });
+        const focalMesh = new THREE.Mesh(focalGeo, focalMat);
+        focalMesh.position.y = 6.6;
+        prismGroup.add(focalMesh);
+
+        // 動畫：三稜鏡旋轉、七彩色環反向旋轉、頂部水晶上下懸浮呼吸
+        this.animatedObjects.push((delta, time) => {
+          prismMesh.rotation.y += delta * 0.8;
+          focalMesh.rotation.y -= delta * 1.2;
+          focalMesh.rotation.z += delta * 0.6;
+          focalMesh.position.y = 6.6 + Math.sin(time * 3) * 0.25;
+          spectralRings.forEach(sr => {
+            sr.mesh.rotation.z += delta * sr.speed;
+          });
+        });
+
+        group.add(prismGroup);
+        break;
+      }
     }
 
     this.landmarksGroup.add(group);

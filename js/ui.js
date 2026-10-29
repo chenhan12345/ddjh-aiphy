@@ -122,7 +122,7 @@ export class IslandUI {
         <div class="progress-capsule" id="btn-open-progress" title="查看探索紀錄與接關碼">
           <div>
             <div style="font-size: 0.72rem; color: var(--muted); font-weight: 700;">群島修業進度</div>
-            <div style="font-size: 0.88rem; font-weight: 800;" id="hud-progress-text">0 / 6 島完成</div>
+            <div style="font-size: 0.88rem; font-weight: 800;" id="hud-progress-text">0 / 7 島完成</div>
           </div>
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill" id="hud-progress-fill"></div>
@@ -1149,8 +1149,8 @@ export class IslandUI {
 
     ctx.fillStyle = '#334155';
     ctx.font = '15px "Microsoft JhengHei", sans-serif';
-    ctx.fillText('已全數修畢群島之數位行政連線、校園 Wi-Fi 排障、單一簽入驗證', 300, 212);
-    ctx.fillText('及理化實驗室跨領域探究課程，表現優異，特頒此證。', 300, 238);
+    ctx.fillText('已全數修畢群島之數位行政連線、校園 Wi-Fi 排障、單一簽入驗證、', 300, 212);
+    ctx.fillText('光影折射成像與理化實驗室跨領域探究課程，表現優異，特頒此證。', 300, 238);
 
     // 底部資訊
     ctx.fillStyle = '#64748b';

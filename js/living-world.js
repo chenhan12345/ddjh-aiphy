@@ -375,7 +375,7 @@ export class LivingWorld {
 
   // 建造每座島海灘上的可拾取貝殼 (Clickable Beach Shells)
   buildBeachShells() {
-    const islandKeys = ['island-center', 'island-01', 'island-02', 'island-03', 'island-04', 'island-05'];
+    const islandKeys = ['island-center', 'island-01', 'island-02', 'island-03', 'island-04', 'island-05', 'island-06'];
 
     islandKeys.forEach((key, idx) => {
       const pos = this.islandWorld.islandPositions[key];
