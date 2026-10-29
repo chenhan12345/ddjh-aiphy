@@ -5,9 +5,9 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { IslandWorld } from './islands.js?v=2.2';
-import { LivingWorld } from './living-world.js?v=2.2';
-import { IslandUI } from './ui.js?v=2.2';
+import { IslandWorld } from './islands.js?v=2.3';
+import { LivingWorld } from './living-world.js?v=2.3';
+import { IslandUI } from './ui.js?v=2.3';
 
 class App {
   constructor() {
@@ -25,6 +25,7 @@ class App {
 
     this.labels = [];
     this.activeIslandId = null;
+    window._app = this;
 
     this.init();
   }
@@ -48,7 +49,9 @@ class App {
       getBackpack: () => this.livingWorld ? this.livingWorld.getBackpack() : {},
       addItem: (id, count) => this.livingWorld ? this.livingWorld.addItem(id, count) : null,
       removeItem: (id, count) => this.livingWorld ? this.livingWorld.removeItem(id, count) : false,
-      onBackpackReset: () => this.livingWorld ? this.livingWorld.initInventory() : null
+      onBackpackReset: () => this.livingWorld ? this.livingWorld.initInventory() : null,
+      onCloseNPC: () => { if (this.livingWorld) this.livingWorld.activeNPC = null; },
+      onFlyToHank: () => this.flyToHank()
     });
 
     // 檢查 WebGL 支援度
@@ -81,6 +84,7 @@ class App {
 
     // 啟動主渲染迴圈
     this.animate();
+    window._app = this;
   }
 
   handleWebGLFallback() {
@@ -273,6 +277,15 @@ class App {
     this.isFlying = true;
   }
 
+  // 視角平滑飛近巡島 Hank 老師身邊
+  flyToHank() {
+    if (!this.livingWorld || !this.livingWorld.touringHank) return;
+    const hPos = this.livingWorld.touringHank.group.position;
+    this.targetCamPos = hPos.clone().add(new THREE.Vector3(0, 16, 22));
+    this.targetControlsTarget = hPos.clone().setY(2.2);
+    this.isFlying = true;
+  }
+
   // 回到群島總全景視角
   resetToOverview() {
     this.activeIslandId = null;
@@ -407,6 +420,7 @@ class App {
 
       // 點擊空白海面關閉居民對話
       this.ui.closeNPCBubble();
+      if (this.livingWorld) this.livingWorld.activeNPC = null;
     });
   }
 
@@ -425,12 +439,15 @@ class App {
       this.camera.position.lerp(this.targetCamPos, 0.08);
       this.controls.target.lerp(this.targetControlsTarget, 0.08);
 
-      if (this.camera.position.distanceTo(this.targetCamPos) < 0.2) {
+      if (this.camera.position.distanceTo(this.targetCamPos) < 0.5) {
+        this.camera.position.copy(this.targetCamPos);
+        this.controls.target.copy(this.targetControlsTarget);
         this.isFlying = false;
+        this.controls.update();
       }
+    } else {
+      this.controls.update();
     }
-
-    this.controls.update();
     this.updateLabels();
     this.renderer.render(this.scene, this.camera);
   }

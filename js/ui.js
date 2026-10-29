@@ -271,9 +271,14 @@ export class IslandUI {
               • 點擊海灘貝殼：撿拾並存入訪客背包<br>
               • 按鍵盤 Esc：隨時關閉目前面板並回到全景
             </div>
-            <button class="btn-primary-action" id="btn-mascot-start" style="width: 100%; justify-content: center;">
-              開始探索群島 ✨
-            </button>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <button class="btn-primary-action" id="btn-mascot-start" style="flex: 1; justify-content: center;">
+                開始探索群島 ✨
+              </button>
+              <button class="btn-primary-action" id="btn-mascot-fly" style="flex: 1; justify-content: center; background: linear-gradient(135deg, var(--accent), #f59e0b); color: #1e293b; font-weight: 800;">
+                🚀 飛往巡島 Hank
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -378,6 +383,17 @@ export class IslandUI {
     document.getElementById('btn-mascot-start').addEventListener('click', () => {
       this.closeModal('modal-mascot');
     });
+
+    const btnMascotFly = document.getElementById('btn-mascot-fly');
+    if (btnMascotFly) {
+      btnMascotFly.addEventListener('click', () => {
+        this.closeModal('modal-mascot');
+        if (this.options && this.options.onFlyToHank) {
+          this.options.onFlyToHank();
+          this.showToast('✈️ 視角正在飛往巡島 Hank 老師身邊！');
+        }
+      });
+    }
 
     // 7. 音樂開關
     document.getElementById('btn-bgm').addEventListener('click', () => {
@@ -968,6 +984,9 @@ export class IslandUI {
     const bubble = document.getElementById('npc-bubble');
     if (bubble) bubble.style.display = 'none';
     this.currentNPC = null;
+    if (this.options && this.options.onCloseNPC) {
+      this.options.onCloseNPC();
+    }
   }
 
   cycleNPCQuote() {

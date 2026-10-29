@@ -27,6 +27,7 @@ export class LivingWorld {
     this.scene.add(this.firefliesGroup);
 
     this.residents = [];
+    this.touringHank = null;
     this.couriers = [];
     this.shells = [];
     this.clouds = [];
@@ -165,12 +166,17 @@ export class LivingWorld {
 
     npcsData.forEach((npc) => {
       const isHank = npc.id === 'npc-center-01';
+      if (isHank) {
+        this.touringHank = this.buildTouringHank(npc);
+        return;
+      }
+
       const isMerchant = npc.id === 'npc-center-02';
       const islandPos = this.islandWorld.islandPositions[npc.islandId] || new THREE.Vector3(0, 0, 0);
 
       const char = this.createCharacterMesh(
-        isHank ? 0xffffff : (npc.color ? parseInt(npc.color.replace('#', '0x')) : 0x2563eb),
-        isHank ? 0x2563eb : (isMerchant ? 0xf59e0b : 0x475569)
+        npc.color ? parseInt(npc.color.replace('#', '0x')) : 0x2563eb,
+        isMerchant ? 0xf59e0b : 0x475569
       );
 
       // 產生該島的安全散步路徑點 (Waypoints)
@@ -202,6 +208,152 @@ export class LivingWorld {
         animTimer: Math.random() * 10
       });
     });
+  }
+
+  // 打造實體巡島導師 Hank 老師 (2.5D 手繪冒險家立繪實體化，於各島木橋巡迴巡島)
+  buildTouringHank(hankData) {
+    const group = new THREE.Group();
+
+    // 載入使用者手繪 Hank 老師插畫材質
+    const textureLoader = new THREE.TextureLoader();
+    const hankTexture = textureLoader.load('hank_mascot.png');
+    hankTexture.colorSpace = THREE.SRGBColorSpace;
+
+    // 2.5D 精緻立繪裁切面板 (高解析度手繪等比立體化，雙面顯現)
+    const billboardNode = new THREE.Group();
+    group.add(billboardNode);
+
+    const planeGeo = new THREE.PlaneGeometry(1.0, 1.0);
+    const planeMat = new THREE.MeshBasicMaterial({
+      map: hankTexture,
+      transparent: true,
+      alphaTest: 0.05,
+      side: THREE.DoubleSide
+    });
+    const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+    planeMesh.position.y = 1.84;
+    planeMesh.scale.set(3.3, 3.67, 1.0);
+    billboardNode.add(planeMesh);
+
+    // 腳底動態柔和接觸陰影
+    const shadowGeo = new THREE.RingGeometry(0.01, 1.05, 16);
+    shadowGeo.rotateX(-Math.PI / 2);
+    const shadowMat = new THREE.MeshBasicMaterial({
+      color: 0x0f172a,
+      transparent: true,
+      opacity: 0.35,
+      depthWrite: false
+    });
+    const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+    shadowMesh.position.y = 0.05;
+    group.add(shadowMesh);
+
+    // 頭頂浮動榮譽徽章 (Canvas Sprite): ★ 巡島導師 Hank 老師
+    const canvas = document.createElement('canvas');
+    canvas.width = 320;
+    canvas.height = 72;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(8, 8, 304, 56, 28);
+      ctx.fill();
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = '#f59e0b';
+      ctx.stroke();
+    } else {
+      ctx.fillRect(8, 8, 304, 56);
+    }
+    ctx.fillStyle = '#fef08a';
+    ctx.font = 'bold 24px "Microsoft JhengHei", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('★ 巡島導師 Hank 老師', 160, 36);
+
+    const tagTexture = new THREE.CanvasTexture(canvas);
+    tagTexture.needsUpdate = true;
+    const tagMat = new THREE.SpriteMaterial({ map: tagTexture, transparent: true });
+    const tagSprite = new THREE.Sprite(tagMat);
+    tagSprite.position.y = 4.2;
+    tagSprite.scale.set(3.6, 0.82, 1.0);
+    billboardNode.add(tagSprite);
+
+    // 導師金星 (Golden Touring Star)
+    const starGeo = new THREE.OctahedronGeometry(0.38, 0);
+    const starMat = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+    const starMesh = new THREE.Mesh(starGeo, starMat);
+    starMesh.position.y = 4.9;
+    billboardNode.add(starMesh);
+
+    // 點擊碰撞盒 (加大 Hitbox，在手機與電腦上皆極易點選)
+    const hitGeo = new THREE.SphereGeometry(2.2, 8, 8);
+    const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+    const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+    hitMesh.position.y = 1.84;
+    const charRef = {
+      group,
+      hitMesh,
+      billboardNode,
+      planeMesh,
+      shadowMesh,
+      tagSprite,
+      starMesh,
+      isTouringHank: true
+    };
+    hitMesh.userData = {
+      type: 'npc',
+      data: hankData,
+      ref: charRef
+    };
+    group.add(hitMesh);
+
+    this.npcGroup.add(group);
+
+    const centerPos = new THREE.Vector3(0, 2.5, 1.5);
+    group.position.copy(centerPos);
+
+    // 規劃跨島巡島航線清單 (環島 6 座外圍島嶼巡視)
+    const islandKeys = ['island-01', 'island-02', 'island-03', 'island-04', 'island-05', 'island-06'];
+
+    return {
+      data: hankData,
+      group,
+      billboardNode,
+      planeMesh,
+      shadowMesh,
+      tagSprite,
+      starMesh,
+      hitMesh,
+      charRef,
+      centerPos,
+      islandKeys,
+      targetIndex: 0,
+      phase: 'center_rest', // 'center_rest' -> 'walk_to_island' -> 'island_inspect' -> 'walk_to_center'
+      timer: 2.0,
+      currentPos: centerPos.clone(),
+      walkTime: 0,
+      speed: 3.5, // 移動速度 (單位/秒)
+      waypoints: [],
+      currentWPIndex: 0
+    };
+  }
+
+  // 產生自中央島沿木橋走向目標島的平滑巡邏路徑點 (Waypoints)
+  generateHankExcursionWaypoints(targetIslandId) {
+    const targetPos = this.islandWorld.islandPositions[targetIslandId];
+    if (!targetPos) return [];
+
+    const dir = new THREE.Vector3().subVectors(targetPos, new THREE.Vector3(0, 0, 0)).normalize();
+
+    return [
+      new THREE.Vector3(0, 2.5, 1.5),
+      new THREE.Vector3(dir.x * 6.0, 2.0, dir.z * 6.0),
+      new THREE.Vector3(dir.x * 12.5, 0.95, dir.z * 12.5), // 木橋起點
+      new THREE.Vector3(dir.x * 20.0, 1.05, dir.z * 20.0), // 木橋中央 (微拱起)
+      new THREE.Vector3(targetPos.x - dir.x * 7.8, 0.95, targetPos.z - dir.z * 7.8), // 木橋終點碼頭
+      new THREE.Vector3(targetPos.x - dir.x * 4.0, 2.2, targetPos.z - dir.z * 4.0), // 外圍島斜坡
+      new THREE.Vector3(targetPos.x - dir.z * 2.8, 2.2, targetPos.z + dir.x * 2.8)  // 外圍島地標旁巡視點
+    ];
   }
 
   // 建造 3 位跨島往返的送貨員
@@ -457,8 +609,12 @@ export class LivingWorld {
   // 點擊居民對話
   interactNPC(npcData, npcChar) {
     this.activeNPC = { data: npcData, char: npcChar };
-    // 讓 NPC 轉向鏡頭並揮手
-    npcChar.group.lookAt(this.camera.position.x, npcChar.group.position.y, this.camera.position.z);
+    // 讓一般 3D 小人轉向鏡頭；實體 Hank 則由巡島控制器處理面向鏡頭與跳躍
+    if (npcChar && npcChar.group) {
+      if (!npcChar.isTouringHank) {
+        npcChar.group.lookAt(this.camera.position.x, npcChar.group.position.y, this.camera.position.z);
+      }
+    }
     this.onNPCClick(npcData);
   }
 
@@ -527,6 +683,123 @@ export class LivingWorld {
         }
       }
     });
+
+    // 1.5 實體巡島導師 Hank 老師跨島巡邏與立繪動畫
+    if (this.touringHank) {
+      const h = this.touringHank;
+
+      // 保持立繪永遠面向相機 (Billboard)
+      h.billboardNode.quaternion.copy(this.camera.quaternion);
+
+      if (h.starMesh) {
+        h.starMesh.rotation.y += delta * 2.2;
+        h.starMesh.rotation.x += delta * 1.1;
+        h.starMesh.position.y = 4.9 + Math.sin(time * 3) * 0.1;
+      }
+
+      // 若正在與訪客對話中：停下腳步、開心微跳躍揮手
+      if (this.activeNPC && this.activeNPC.data.id === h.data.id) {
+        const hop = Math.sin(time * 8) * 0.2;
+        h.planeMesh.position.y = 1.84 + Math.max(0, hop);
+        h.tagSprite.scale.set(3.8, 0.86, 1.0);
+      } else {
+        h.tagSprite.scale.set(3.6, 0.82, 1.0);
+
+        if (h.phase === 'center_rest') {
+          // 在中央島巡視休整
+          h.timer -= delta;
+          h.planeMesh.position.y = 1.84 + Math.sin(time * 2.5) * 0.05;
+          if (h.timer <= 0) {
+            const nextTargetId = h.islandKeys[h.targetIndex];
+            h.waypoints = this.generateHankExcursionWaypoints(nextTargetId);
+            h.currentWPIndex = 0;
+            h.phase = 'walk_to_island';
+          }
+        } else if (h.phase === 'walk_to_island') {
+          // 沿木橋邁步前往目標島
+          const targetWP = h.waypoints[h.currentWPIndex];
+          if (!targetWP) {
+            h.phase = 'island_inspect';
+            h.timer = 4.0;
+          } else {
+            const toWP = new THREE.Vector3().subVectors(targetWP, h.group.position);
+            const dist = toWP.length();
+            h.walkTime += delta;
+            const stepDist = h.speed * delta;
+
+            if (dist <= stepDist || dist < 0.25) {
+              h.group.position.copy(targetWP);
+              h.currentWPIndex++;
+              if (h.currentWPIndex >= h.waypoints.length) {
+                h.phase = 'island_inspect';
+                h.timer = 4.0; // 到達目標島！駐足巡視 4 秒
+              }
+            } else {
+              toWP.normalize();
+              h.group.position.addScaledVector(toWP, stepDist);
+
+              // 根據運動方向在螢幕水平方向做鏡像翻轉
+              const camRight = new THREE.Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
+              const dot = toWP.dot(camRight);
+              if (dot > 0.08) h.planeMesh.scale.set(3.3, 3.67, 1.0);
+              else if (dot < -0.08) h.planeMesh.scale.set(-3.3, 3.67, 1.0);
+
+              // 步伐節奏彈跳與輕微擺動
+              const bounce = Math.abs(Math.sin(h.walkTime * 8)) * 0.2;
+              h.planeMesh.position.y = 1.84 + bounce;
+              h.planeMesh.rotation.z = Math.sin(h.walkTime * 8) * 0.06;
+              h.shadowMesh.scale.setScalar(1.0 - bounce * 0.35);
+            }
+          }
+        } else if (h.phase === 'island_inspect') {
+          // 在目標島巡視
+          h.timer -= delta;
+          h.planeMesh.position.y = 1.84 + Math.abs(Math.sin(time * 3)) * 0.08;
+          if (h.timer <= 0) {
+            // 巡視完畢，沿木橋回程
+            h.waypoints = this.generateHankExcursionWaypoints(h.islandKeys[h.targetIndex]).reverse();
+            h.currentWPIndex = 0;
+            h.phase = 'walk_to_center';
+          }
+        } else if (h.phase === 'walk_to_center') {
+          // 沿木橋邁步返回中央島
+          const targetWP = h.waypoints[h.currentWPIndex];
+          if (!targetWP) {
+            h.phase = 'center_rest';
+            h.timer = 3.0;
+            h.targetIndex = (h.targetIndex + 1) % h.islandKeys.length;
+          } else {
+            const toWP = new THREE.Vector3().subVectors(targetWP, h.group.position);
+            const dist = toWP.length();
+            h.walkTime += delta;
+            const stepDist = h.speed * delta;
+
+            if (dist <= stepDist || dist < 0.25) {
+              h.group.position.copy(targetWP);
+              h.currentWPIndex++;
+              if (h.currentWPIndex >= h.waypoints.length) {
+                h.phase = 'center_rest';
+                h.timer = 3.0; // 回到中央島休整 3 秒
+                h.targetIndex = (h.targetIndex + 1) % h.islandKeys.length; // 準備前往下一座島
+              }
+            } else {
+              toWP.normalize();
+              h.group.position.addScaledVector(toWP, stepDist);
+
+              const camRight = new THREE.Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
+              const dot = toWP.dot(camRight);
+              if (dot > 0.08) h.planeMesh.scale.set(3.3, 3.67, 1.0);
+              else if (dot < -0.08) h.planeMesh.scale.set(-3.3, 3.67, 1.0);
+
+              const bounce = Math.abs(Math.sin(h.walkTime * 8)) * 0.2;
+              h.planeMesh.position.y = 1.84 + bounce;
+              h.planeMesh.rotation.z = Math.sin(h.walkTime * 8) * 0.06;
+              h.shadowMesh.scale.setScalar(1.0 - bounce * 0.35);
+            }
+          }
+        }
+      }
+    }
 
     // 2. 送貨員往返木橋
     this.couriers.forEach((c) => {
