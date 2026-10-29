@@ -73,7 +73,7 @@ export class IslandUI {
             🎒
             <span class="badge-dot" id="backpack-dot" style="display: none;"></span>
           </button>
-          <button class="btn-icon" id="btn-bgm" title="播放微風背景音樂" aria-label="音樂開關">🎵</button>
+          <button class="btn-icon" id="btn-bgm" title="播放 / 暫停背景音樂" aria-label="音樂開關">🎵</button>
           <button class="btn-icon" id="btn-reduced-motion" title="減少動態 / 暫停動畫" aria-label="減少動態">⏸️</button>
           <button class="btn-icon" id="btn-quick-fly-hank" title="🚀 飛往巡島 Hank 老師身邊" aria-label="追蹤 Hank" style="background: rgba(245, 158, 11, 0.15); border: 1.5px solid var(--accent); color: var(--accent);">🚀</button>
           <button class="btn-icon" id="btn-reset-view" title="回到群島全景" aria-label="回到全景">🏠</button>
@@ -1277,10 +1277,12 @@ export class IslandUI {
     if (fill) fill.style.width = `${percent}%`;
   }
 
-  // Web Audio 程序化 Lo-Fi 輕晶片微風音樂
+  // 背景音樂系統 (HTML5 Audio 實體原聲音樂)
   initAudioSynth() {
-    this.audioCtx = null;
-    this.melodyInterval = null;
+    this.bgmAudio = new Audio('bgm.mp3');
+    this.bgmAudio.loop = true;
+    this.bgmAudio.volume = 0.5;
+    this.bgmAudio.preload = 'auto';
   }
 
   toggleAudio() {
@@ -1288,54 +1290,35 @@ export class IslandUI {
     if (this.audioPlaying) {
       this.stopAudio();
       btn.style.color = 'var(--ink)';
-      this.showToast('🔇 已關閉微風音樂');
+      btn.style.borderColor = 'var(--line)';
+      this.showToast('🔇 已暫停背景音樂');
     } else {
       this.startAudio();
       btn.style.color = 'var(--primary)';
-      this.showToast('🎵 已開啟微風 Lo-Fi 音樂（純程式合成）');
+      btn.style.borderColor = 'var(--primary)';
+      this.showToast('🎵 已開啟探險島嶼背景音樂');
     }
   }
 
   startAudio() {
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      this.audioCtx = new AudioContext();
-      this.audioPlaying = true;
-
-      // 輕快琶音音符頻率 (C Major Pentatonic: C4, D4, E4, G4, A4, C5)
-      const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
-      let noteIdx = 0;
-
-      this.melodyInterval = setInterval(() => {
-        if (!this.audioCtx) return;
-        const osc = this.audioCtx.createOscillator();
-        const gain = this.audioCtx.createGain();
-
-        osc.type = 'triangle';
-        const freq = notes[noteIdx % notes.length];
-        osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
-
-        gain.gain.setValueAtTime(0.04, this.audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + 0.8);
-
-        osc.connect(gain);
-        gain.connect(this.audioCtx.destination);
-
-        osc.start();
-        osc.stop(this.audioCtx.currentTime + 0.8);
-
-        noteIdx = (noteIdx + Math.floor(Math.random() * 2) + 1);
-      }, 420);
-    } catch (e) {
-      console.warn('Web Audio 初始化受瀏覽器政策限制');
+    if (!this.bgmAudio) {
+      this.initAudioSynth();
+    }
+    this.audioPlaying = true;
+    const playPromise = this.bgmAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((e) => {
+        console.warn('瀏覽器自動播放限制，需由使用者觸發點擊:', e);
+        this.audioPlaying = false;
+        const btn = document.getElementById('btn-bgm');
+        if (btn) btn.style.color = 'var(--ink)';
+      });
     }
   }
 
   stopAudio() {
-    if (this.melodyInterval) clearInterval(this.melodyInterval);
-    if (this.audioCtx) {
-      this.audioCtx.close();
-      this.audioCtx = null;
+    if (this.bgmAudio) {
+      this.bgmAudio.pause();
     }
     this.audioPlaying = false;
   }
