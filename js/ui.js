@@ -66,6 +66,7 @@ export class IslandUI {
             </button>
           </div>
 
+          <div class="nav-icon-buttons">
           <button class="btn-icon" id="btn-search" title="搜尋島嶼與知識 (Ctrl+F)" aria-label="搜尋">🔍</button>
           <button class="btn-icon" id="btn-places-list" title="地點清單（無 3D 亦可全覽）" aria-label="地點清單">📋</button>
           <button class="btn-icon" id="btn-backpack" title="訪客背包與道具" aria-label="背包">
@@ -76,6 +77,7 @@ export class IslandUI {
           <button class="btn-icon" id="btn-reduced-motion" title="減少動態 / 暫停動畫" aria-label="減少動態">⏸️</button>
           <button class="btn-icon" id="btn-quick-fly-hank" title="🚀 飛往巡島 Hank 老師身邊" aria-label="追蹤 Hank" style="background: rgba(245, 158, 11, 0.15); border: 1.5px solid var(--accent); color: var(--accent);">🚀</button>
           <button class="btn-icon" id="btn-reset-view" title="回到群島全景" aria-label="回到全景">🏠</button>
+          </div>
         </div>
       </header>
 

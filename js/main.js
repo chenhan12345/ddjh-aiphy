@@ -1,13 +1,13 @@
-/* ==========================================================
+﻿/* ==========================================================
    大墩元素週期島：3D 核心主程序 (main.js)
    依據 references/living-world.md 與 theme.md 實作
    ========================================================== */
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { IslandWorld } from './islands.js?v=2.3';
-import { LivingWorld } from './living-world.js?v=2.3';
-import { IslandUI } from './ui.js?v=2.3';
+import { IslandWorld } from './islands.js?v=2.4';
+import { LivingWorld } from './living-world.js?v=2.4';
+import { IslandUI } from './ui.js?v=2.4';
 
 class App {
   constructor() {
@@ -142,7 +142,19 @@ class App {
 
   initCamera() {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 600);
+    this.updateOverviewForAspect();
     this.camera.position.copy(this.overviewCamPos);
+    this.targetCamPos = this.overviewCamPos.clone();
+  }
+
+  // 手機直式螢幕：拉遠全景鏡頭並淡化霧氣，讓 7 座島完整入鏡
+  updateOverviewForAspect() {
+    const aspect = window.innerWidth / window.innerHeight;
+    const factor = aspect < 1 ? Math.min(2.0, 0.85 / aspect) : 1;
+    this.viewFactor = Math.max(1, factor);
+    this.overviewCamPos = new THREE.Vector3(0, 48, 68).multiplyScalar(this.viewFactor);
+    if (this.fog) this.fog.density = 0.0055 / this.viewFactor;
+    if (this.controls) this.controls.maxDistance = 140 * this.viewFactor;
   }
 
   initControls() {
@@ -151,7 +163,7 @@ class App {
     this.controls.dampingFactor = 0.06;
     this.controls.maxPolarAngle = Math.PI / 2 - 0.06; // 防止鏡頭鑽入海底
     this.controls.minDistance = 14;
-    this.controls.maxDistance = 140;
+    this.controls.maxDistance = 140 * (this.viewFactor || 1);
     this.controls.target.copy(this.overviewTarget);
   }
 
@@ -283,7 +295,7 @@ class App {
     if (!this.livingWorld || !this.livingWorld.touringHank) return;
     this.activeIslandId = null;
     const hPos = this.livingWorld.touringHank.group.position;
-    this.targetCamPos = hPos.clone().add(new THREE.Vector3(0, 11, 15));
+    this.targetCamPos = hPos.clone().add(new THREE.Vector3(0, 13, 16));
     this.targetControlsTarget = hPos.clone().setY(2.2);
     this.isFlying = true;
     this.isFollowingHank = true;
@@ -370,6 +382,7 @@ class App {
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.updateOverviewForAspect();
     });
 
     // 畫布點擊偵測（拾取貝殼、居民對話、點島飛入）
@@ -443,12 +456,13 @@ class App {
     if (this.isFlying) {
       if (this.isFollowingHank && this.livingWorld && this.livingWorld.touringHank) {
         const hPos = this.livingWorld.touringHank.group.position;
-        this.targetCamPos.set(hPos.x, hPos.y + 11, hPos.z + 15);
+        this.targetCamPos.set(hPos.x, hPos.y + 13, hPos.z + 16);
         this.targetControlsTarget.set(hPos.x, hPos.y + 2.0, hPos.z);
       }
 
-      this.camera.position.lerp(this.targetCamPos, 0.08);
-      this.controls.target.lerp(this.targetControlsTarget, 0.08);
+      const flyAlpha = 1 - Math.pow(0.92, Math.min(delta, 0.1) * 60);
+      this.camera.position.lerp(this.targetCamPos, flyAlpha);
+      this.controls.target.lerp(this.targetControlsTarget, flyAlpha);
 
       if (this.camera.position.distanceTo(this.targetCamPos) < 0.6) {
         this.camera.position.copy(this.targetCamPos);
