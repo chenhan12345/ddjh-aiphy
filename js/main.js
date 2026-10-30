@@ -17,7 +17,7 @@ class App {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
 
-    this.overviewCamPos = new THREE.Vector3(0, 48, 68);
+    this.overviewCamPos = new THREE.Vector3(0, 52, 72);
     this.overviewTarget = new THREE.Vector3(0, 2, 0);
     this.targetCamPos = this.overviewCamPos.clone();
     this.targetControlsTarget = this.overviewTarget.clone();
@@ -152,7 +152,7 @@ class App {
     const aspect = window.innerWidth / window.innerHeight;
     const factor = aspect < 1 ? Math.min(2.0, 0.85 / aspect) : 1;
     this.viewFactor = Math.max(1, factor);
-    this.overviewCamPos = new THREE.Vector3(0, 48, 68).multiplyScalar(this.viewFactor);
+    this.overviewCamPos = new THREE.Vector3(0, 52, 72).multiplyScalar(this.viewFactor);
     if (this.fog) this.fog.density = 0.0055 / this.viewFactor;
     if (this.controls) this.controls.maxDistance = 140 * this.viewFactor;
   }

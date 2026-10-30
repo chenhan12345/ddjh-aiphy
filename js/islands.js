@@ -125,14 +125,16 @@ export class IslandWorld {
     this.buildCenterLandmark(centerPos, centerIsland.topY);
     this.populateIslandFloraAndBuildings(centerIsland.group, centerIsland.radius * 0.85, centerIsland.topY, true);
 
-    // 2. 五座外圍學習島嶼
+    // 2. 六座主環形外圍學習島嶼（島嶼 1~6 圍繞中央島配置）
     const radiusDistance = 34;
     const islandsList = this.data.islands;
-    const totalIslands = islandsList.length;
+    const radialIslands = islandsList.filter(i => i.id !== 'island-07');
+    const extensionIsland = islandsList.find(i => i.id === 'island-07');
+    const totalRadial = 6;
 
-    islandsList.forEach((island, index) => {
-      // 依角度平均環繞配置
-      const angle = (index / totalIslands) * Math.PI * 2 - Math.PI / 2;
+    radialIslands.forEach((island, index) => {
+      // 前 6 座島依 60 度均勻環繞配置
+      const angle = (index / totalRadial) * Math.PI * 2 - Math.PI / 2;
       const x = Math.cos(angle) * radiusDistance;
       const z = Math.sin(angle) * radiusDistance;
       const pos = new THREE.Vector3(x, 0, z);
@@ -152,6 +154,30 @@ export class IslandWorld {
       // 連接中央島至外圍島的木橋
       this.buildBridge(centerPos, pos, 12.5, 7.8);
     });
+
+    // 3. 第七座島嶼：由第六島（聲波迴響共鳴島）向外海延續接續之研究前哨島（非放射型，單獨連接第六島）
+    if (extensionIsland && this.islandPositions['island-06']) {
+      const pos6 = this.islandPositions['island-06'];
+      // 沿第六島向外延伸之方向 (方位角 -150 度)
+      const extDir = new THREE.Vector3(pos6.x, 0, pos6.z).normalize();
+      const extDistance = 25.0;
+      const pos7 = new THREE.Vector3().copy(pos6).addScaledVector(extDir, extDistance);
+      this.islandPositions[extensionIsland.id] = pos7;
+
+      const islandBase7 = this.createIslandBase(9.2, 3.2, 22, 0.26, 7 * 17 + 5);
+      islandBase7.group.position.copy(pos7);
+      this.islandsGroup.add(islandBase7.group);
+      this.islandMeshes[extensionIsland.id] = islandBase7.group;
+
+      // 建立第七島專屬獨特光學地標
+      this.buildUniqueLandmark(extensionIsland.id, pos7, islandBase7.topY);
+
+      // 配置島上自然景觀
+      this.populateIslandFloraAndBuildings(islandBase7.group, islandBase7.radius * 0.82, islandBase7.topY, false);
+
+      // 核心：由第六島延伸至第七島之外海跨島木橋（起迄端點均為外圍島，offset 設為 7.8）
+      this.buildBridge(pos6, pos7, 7.8, 7.8);
+    }
   }
 
   // 中央島專屬地標：發光元素週期巨碑＋Hank 圓頂理化實驗室＋旋轉原子軌道

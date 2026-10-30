@@ -343,6 +343,27 @@ export class LivingWorld {
     const targetPos = this.islandWorld.islandPositions[targetIslandId];
     if (!targetPos) return [];
 
+    // 若目標為第七島 (光影幻境探索島)：先從中央島過橋至第六島 (聲波迴響共鳴島)，再沿延伸木橋抵達第七島
+    if (targetIslandId === 'island-07' && this.islandWorld.islandPositions['island-06']) {
+      const pos6 = this.islandWorld.islandPositions['island-06'];
+      const dir6 = new THREE.Vector3(pos6.x, 0, pos6.z).normalize();
+      const dir6to7 = new THREE.Vector3().subVectors(targetPos, pos6).normalize();
+
+      return [
+        new THREE.Vector3(0, 2.5, 1.5),
+        new THREE.Vector3(dir6.x * 6.0, 2.0, dir6.z * 6.0),
+        new THREE.Vector3(dir6.x * 12.5, 0.95, dir6.z * 12.5), // 中央島木橋起點
+        new THREE.Vector3(dir6.x * 20.0, 1.05, dir6.z * 20.0), // 木橋中央
+        new THREE.Vector3(pos6.x - dir6.x * 7.8, 0.95, pos6.z - dir6.z * 7.8), // 第六島碼頭
+        new THREE.Vector3(pos6.x, 2.2, pos6.z), // 巡視第六島中心
+        new THREE.Vector3(pos6.x + dir6to7.x * 7.8, 0.95, pos6.z + dir6to7.z * 7.8), // 延伸木橋起點碼頭
+        new THREE.Vector3((pos6.x + targetPos.x) * 0.5, 1.05, (pos6.z + targetPos.z) * 0.5), // 延伸木橋中央
+        new THREE.Vector3(targetPos.x - dir6to7.x * 7.8, 0.95, targetPos.z - dir6to7.z * 7.8), // 第七島碼頭
+        new THREE.Vector3(targetPos.x - dir6to7.x * 3.5, 2.2, targetPos.z - dir6to7.z * 3.5), // 第七島緩坡
+        new THREE.Vector3(targetPos.x - dir6to7.z * 2.8, 2.2, targetPos.z + dir6to7.x * 2.8)  // 第七島地標旁巡視點
+      ];
+    }
+
     const dir = new THREE.Vector3().subVectors(targetPos, new THREE.Vector3(0, 0, 0)).normalize();
 
     return [
