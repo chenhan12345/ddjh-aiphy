@@ -1325,3 +1325,21 @@ body.reduced-motion * {
     font-size: 0.9rem;
   }
 }
+
+
+/* NPC Inspector Mode & Badges */
+#btn-npc-inspector.active {
+  background: rgba(2, 132, 199, 0.25) !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.45);
+}
+
+.npc-detail-card {
+  transition: all 0.2s ease;
+}
+
+.npc-detail-card:hover {
+  border-color: var(--accent) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}

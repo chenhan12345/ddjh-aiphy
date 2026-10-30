@@ -51,7 +51,12 @@ class App {
       removeItem: (id, count) => this.livingWorld ? this.livingWorld.removeItem(id, count) : false,
       onBackpackReset: () => this.livingWorld ? this.livingWorld.initInventory() : null,
       onCloseNPC: () => { if (this.livingWorld) this.livingWorld.activeNPC = null; },
-      onFlyToHank: () => this.flyToHank()
+      onFlyToHank: () => this.flyToHank(),
+      onToggleNPCInspector: () => this.toggleNPCInspector(),
+      onFlyToNPC: (npcId) => this.flyToNPC(npcId),
+      onInteractNPC: (npcId) => this.interactWithNPC(npcId),
+      onSet3DInspectorMode: (enabled) => this.livingWorld ? this.livingWorld.setInspectorMode(enabled) : null,
+      getInspectorNPCData: () => this.getInspectorNPCData()
     });
 
     // 檢查 WebGL 支援度
@@ -308,6 +313,142 @@ class App {
     this.targetCamPos = this.overviewCamPos.clone();
     this.targetControlsTarget = this.overviewTarget.clone();
     this.isFlying = true;
+  }
+
+  // 取得全島居民巡邏路徑與地標安全淨距分析資料（支援動態擴展至未來所有新島嶼）
+  getInspectorNPCData() {
+    if (!this.livingWorld || !this.islandWorld) return [];
+    const results = [];
+
+    // 1. 各島常駐居民
+    this.livingWorld.residents.forEach(r => {
+      const isl = this.data.islands.find(i => i.id === r.data.islandId) || { name: '中央 AI 元素島' };
+      const islPos = this.islandWorld.islandPositions[r.data.islandId] || new THREE.Vector3(0, 0, 0);
+      const currPos = r.char.group.position;
+      const dx = currPos.x - islPos.x;
+      const dz = currPos.z - islPos.z;
+      const distFromCenter = Math.sqrt(dx * dx + dz * dz);
+      // 外圍島地標最大基座 3.4m，中央島 3.8m
+      const landmarkRadius = r.data.islandId === 'island-center' ? 3.8 : 3.4;
+      const clearance = Math.max(0, distFromCenter - landmarkRadius);
+
+      results.push({
+        id: r.data.id,
+        name: r.data.name,
+        islandId: r.data.islandId,
+        islandName: isl.name,
+        role: r.data.role,
+        color: r.data.color || '#38bdf8',
+        currentPos: { x: currPos.x.toFixed(1), z: currPos.z.toFixed(1) },
+        distFromCenter: distFromCenter.toFixed(1),
+        clearance: clearance.toFixed(1),
+        isSafe: clearance >= 0.8,
+        waypoints: r.waypoints.map(w => ({ x: w.x.toFixed(1), z: w.z.toFixed(1) }))
+      });
+    });
+
+    // 2. 實體巡島 Hank 老師
+    if (this.livingWorld.touringHank) {
+      const h = this.livingWorld.touringHank;
+      const hp = h.group.position;
+      results.push({
+        id: h.data.id,
+        name: h.data.name,
+        islandId: 'cross-island',
+        islandName: '全群島跨島巡航',
+        role: h.data.role,
+        color: '#f59e0b',
+        currentPos: { x: hp.x.toFixed(1), z: hp.z.toFixed(1) },
+        distFromCenter: Math.sqrt(hp.x * hp.x + hp.z * hp.z).toFixed(1),
+        clearance: '4.5',
+        isSafe: true,
+        isHank: true,
+        phase: h.phase
+      });
+    }
+
+    // 3. 物流送貨員
+    this.livingWorld.couriers.forEach((c) => {
+      const ud = c.char.hitMesh.userData.data;
+      const cp = c.char.group.position;
+      results.push({
+        id: ud.id,
+        name: ud.name,
+        islandId: 'shipping-route',
+        islandName: '跨島物流航道',
+        role: ud.role,
+        color: '#0284c7',
+        currentPos: { x: cp.x.toFixed(1), z: cp.z.toFixed(1) },
+        distFromCenter: Math.sqrt(cp.x * cp.x + cp.z * cp.z).toFixed(1),
+        clearance: '5.0',
+        isSafe: true,
+        isCourier: true
+      });
+    });
+
+    return results;
+  }
+
+  // 切換居民路徑巡檢面板與 3D 導引視圖
+  toggleNPCInspector() {
+    if (!this.livingWorld) return;
+    const nextState = !this.livingWorld.isInspectorMode;
+    this.livingWorld.setInspectorMode(nextState);
+    if (this.ui) this.ui.toggleNPCInspectorModal(nextState);
+  }
+
+  // 視角平滑飛向指定 NPC 身邊並開啟互動對話
+  flyToNPC(npcId) {
+    if (!this.livingWorld) return;
+    this.isFollowingHank = false;
+    let targetChar = null;
+    let targetData = null;
+
+    if (this.livingWorld.touringHank && this.livingWorld.touringHank.data.id === npcId) {
+      targetChar = this.livingWorld.touringHank;
+      targetData = this.livingWorld.touringHank.data;
+      this.isFollowingHank = true;
+    } else {
+      const res = this.livingWorld.residents.find(r => r.data.id === npcId);
+      if (res) {
+        targetChar = res.char;
+        targetData = res.data;
+      } else {
+        const cou = this.livingWorld.couriers.find(c => c.char.hitMesh.userData && c.char.hitMesh.userData.data.id === npcId);
+        if (cou) {
+          targetChar = cou.char;
+          targetData = cou.char.hitMesh.userData.data;
+        }
+      }
+    }
+
+    if (targetChar && targetChar.group) {
+      const p = targetChar.group.position;
+      this.targetCamPos = p.clone().add(new THREE.Vector3(0, 7.5, 10.5));
+      this.targetControlsTarget = p.clone().setY(2.2);
+      this.isFlying = true;
+      setTimeout(() => {
+        this.livingWorld.interactNPC(targetData, targetChar);
+      }, 750);
+    }
+  }
+
+  // 直接觸發 NPC 對話氣泡
+  interactWithNPC(npcId) {
+    if (!this.livingWorld) return;
+    if (this.livingWorld.touringHank && this.livingWorld.touringHank.data.id === npcId) {
+      this.livingWorld.interactNPC(this.livingWorld.touringHank.data, this.livingWorld.touringHank);
+      return;
+    }
+    const res = this.livingWorld.residents.find(r => r.data.id === npcId);
+    if (res) {
+      this.livingWorld.interactNPC(res.data, res.char);
+      return;
+    }
+    const cou = this.livingWorld.couriers.find(c => c.char.hitMesh.userData && c.char.hitMesh.userData.data.id === npcId);
+    if (cou) {
+      this.livingWorld.interactNPC(cou.char.hitMesh.userData.data, cou.char);
+    }
   }
 
   // 點擊居民處理

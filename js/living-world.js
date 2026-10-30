@@ -19,8 +19,12 @@ export class LivingWorld {
     this.seaLifeGroup = new THREE.Group();
     this.shellsGroup = new THREE.Group();
     this.firefliesGroup = new THREE.Group();
+    this.inspectorVisualsGroup = new THREE.Group();
+    this.inspectorVisualsGroup.visible = false;
 
     this.scene.add(this.npcGroup);
+    this.scene.add(this.inspectorVisualsGroup);
+    this.isInspectorMode = false;
     this.scene.add(this.skyGroup);
     this.scene.add(this.seaLifeGroup);
     this.scene.add(this.shellsGroup);
@@ -140,9 +144,13 @@ export class LivingWorld {
       char.add(crate);
     }
 
-    // 擴大點擊碰撞判定球 (Mobile-friendly hitbox)
-    const hitSphereGeo = new THREE.SphereGeometry(1.2, 6, 6);
-    const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+    // 擴大點擊碰撞判定球 (Mobile-friendly hitbox: 半徑加大至 2.4，transparent: true 確保 Three.js Raycaster 100% 偵測)
+    const hitSphereGeo = new THREE.SphereGeometry(2.4, 8, 8);
+    const hitMat = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,
+      depthWrite: false
+    });
     const hitMesh = new THREE.Mesh(hitSphereGeo, hitMat);
     hitMesh.position.y = 1.0;
     char.add(hitMesh);
@@ -160,9 +168,52 @@ export class LivingWorld {
     };
   }
 
+  // 核心安全散步路徑演算法 (保證不被地標或木屋遮擋，且完全面向相機視野)
+  generateSafeResidentWaypoints(islandId, islandPos, npcIndex) {
+    if (islandId === 'island-center') {
+      // 中央島商人阿布：圍繞特色攤位巡視，靠近正面開闊廣場 (x: 0, z: 4.5)
+      return [
+        new THREE.Vector3(islandPos.x + 1.8, 2.5, islandPos.z + 4.8),
+        new THREE.Vector3(islandPos.x + 0.0, 2.5, islandPos.z + 6.2),
+        new THREE.Vector3(islandPos.x - 1.8, 2.5, islandPos.z + 4.8),
+        new THREE.Vector3(islandPos.x + 0.0, 2.5, islandPos.z + 3.8)
+      ];
+    }
+
+    // 外圍島嶼（包含島 1~7 及未來所有新島嶼）：
+    // 地標基座最大 3.4m，外圍懸崖約 7.5m~9.2m
+    // 安全半徑設定為 4.8m ~ 5.5m，完全避開中央地標 (淨距 >= 1.4m)，且遠離後方木屋
+    // 兩位居民分別在東南區與西南區巡視，迎向主相機視野
+    const isFirst = npcIndex % 2 === 0;
+    const baseR = isFirst ? 5.1 : 4.8;
+
+    // NPC 0 (老師/領航): 巡邏東南正面弧線
+    // NPC 1 (同學/夥伴): 巡邏西南正面弧線
+    const angles = isFirst
+      ? [-0.25 * Math.PI, -0.05 * Math.PI, 0.15 * Math.PI, 0.35 * Math.PI]
+      : [-0.45 * Math.PI, -0.65 * Math.PI, -0.85 * Math.PI, -0.60 * Math.PI];
+
+    const radii = isFirst
+      ? [baseR, baseR + 0.4, baseR + 0.2, baseR - 0.3]
+      : [baseR, baseR + 0.3, baseR - 0.2, baseR + 0.4];
+
+    const waypoints = [];
+    for (let i = 0; i < 4; i++) {
+      const ang = angles[i];
+      const r = radii[i];
+      waypoints.push(new THREE.Vector3(
+        islandPos.x + Math.cos(ang) * r,
+        2.5,
+        islandPos.z + Math.sin(ang) * r
+      ));
+    }
+    return waypoints;
+  }
+
   // 建造群島常駐居民與商人
   buildNPCs() {
     const npcsData = this.data.residents;
+    const islandNPCIndexMap = {};
 
     npcsData.forEach((npc) => {
       const isHank = npc.id === 'npc-center-01';
@@ -180,21 +231,20 @@ export class LivingWorld {
       );
 
       // 產生該島的安全散步路徑點 (Waypoints)
-      const baseRadius = npc.islandId === 'island-center' ? 5.5 : 4.2;
-      const waypoints = [];
-      const wpCount = 4;
-      for (let i = 0; i < wpCount; i++) {
-        const ang = (i / wpCount) * Math.PI * 2 + Math.random() * 0.5;
-        const d = baseRadius * (0.5 + Math.random() * 0.4);
-        waypoints.push(new THREE.Vector3(
-          islandPos.x + Math.cos(ang) * d,
-          2.5,
-          islandPos.z + Math.sin(ang) * d
-        ));
-      }
+      islandNPCIndexMap[npc.islandId] = (islandNPCIndexMap[npc.islandId] || 0);
+      const npcIndexOnIsland = islandNPCIndexMap[npc.islandId]++;
 
+      const waypoints = this.generateSafeResidentWaypoints(npc.islandId, islandPos, npcIndexOnIsland);
       char.group.position.copy(waypoints[0]);
-      char.hitMesh.userData = { type: 'npc', data: npc, ref: char };
+
+      // 核心升級：賦予角色全身上下所有 Mesh 與判定球 NPC 互動資料，點擊 100% 觸發
+      const npcUserData = { type: 'npc', data: npc, ref: char };
+      char.hitMesh.userData = npcUserData;
+      char.group.traverse((obj) => {
+        if (obj.isMesh) {
+          obj.userData = npcUserData;
+        }
+      });
       this.npcGroup.add(char.group);
 
       this.residents.push({
@@ -204,7 +254,7 @@ export class LivingWorld {
         currentWP: 0,
         state: 'walk', // walk, wait, wave
         stateTimer: 0,
-        speed: 1.2 + Math.random() * 0.4,
+        speed: 1.1 + Math.random() * 0.3,
         animTimer: Math.random() * 10
       });
     });
@@ -285,9 +335,13 @@ export class LivingWorld {
     starMesh.position.y = 4.9;
     billboardNode.add(starMesh);
 
-    // 點擊碰撞盒 (加大 Hitbox，在手機與電腦上皆極易點選)
-    const hitGeo = new THREE.SphereGeometry(2.2, 8, 8);
-    const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+    // 點擊碰撞盒 (加大 Hitbox 至 3.2m，使用 transparent: true 確保 Raycaster 100% 偵測)
+    const hitGeo = new THREE.SphereGeometry(3.2, 8, 8);
+    const hitMat = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,
+      depthWrite: false
+    });
     const hitMesh = new THREE.Mesh(hitGeo, hitMat);
     hitMesh.position.y = 1.84;
     const charRef = {
@@ -300,11 +354,15 @@ export class LivingWorld {
       starMesh,
       isTouringHank: true
     };
-    hitMesh.userData = {
+    const hankUserData = {
       type: 'npc',
       data: hankData,
       ref: charRef
     };
+    hitMesh.userData = hankUserData;
+    planeMesh.userData = hankUserData;
+    tagSprite.userData = hankUserData;
+    starMesh.userData = hankUserData;
     group.add(hitMesh);
 
     this.npcGroup.add(group);
@@ -408,6 +466,10 @@ export class LivingWorld {
         },
         ref: char
       };
+
+      char.group.traverse((obj) => {
+        if (obj.isMesh) obj.userData = char.hitMesh.userData;
+      });
 
       this.npcGroup.add(char.group);
 
@@ -926,5 +988,138 @@ export class LivingWorld {
       }
       pos.needsUpdate = true;
     }
+
+    // 8. 巡邏路徑檢視模式：讓地面路徑環與頭頂標記自然懸浮
+    if (this.isInspectorMode && this.inspectorVisualsGroup.visible) {
+      this.inspectorVisualsGroup.children.forEach((child) => {
+        if (child.userData && child.userData.isInspectorPin) {
+          child.quaternion.copy(this.camera.quaternion);
+        }
+      });
+    }
+  }
+
+  // 打造全局 3D 居民散步路徑與路徑點視覺化系統
+  buildInspectorVisuals() {
+    this.inspectorVisualsGroup.clear();
+
+    // 1. 各島常駐居民路徑 (Glowing Loop Ribbon + Waypoint Ring Markers)
+    this.residents.forEach((r, idx) => {
+      const color = r.data.color ? parseInt(r.data.color.replace('#', '0x')) : 0x38bdf8;
+      const pts = [...r.waypoints, r.waypoints[0]];
+
+      // A. 3D 連接曲線路徑
+      const curve = new THREE.CatmullRomCurve3(pts, true);
+      const curvePoints = curve.getPoints(36);
+      const lineGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
+      const lineMat = new THREE.LineBasicMaterial({
+        color,
+        linewidth: 2,
+        transparent: true,
+        opacity: 0.95
+      });
+      const pathLine = new THREE.Line(lineGeo, lineMat);
+      this.inspectorVisualsGroup.add(pathLine);
+
+      // B. 地面路徑點圓環 (Waypoint Discs on Grass)
+      r.waypoints.forEach((wp, wIdx) => {
+        const ringGeo = new THREE.RingGeometry(0.18, 0.48, 16);
+        ringGeo.rotateX(-Math.PI / 2);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0xfbbf24,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.85
+        });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.position.set(wp.x, 2.22, wp.z);
+        this.inspectorVisualsGroup.add(ringMesh);
+
+        // 中央實心光點
+        const dotGeo = new THREE.CircleGeometry(0.12, 12);
+        dotGeo.rotateX(-Math.PI / 2);
+        const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const dotMesh = new THREE.Mesh(dotGeo, dotMat);
+        dotMesh.position.set(wp.x, 2.23, wp.z);
+        this.inspectorVisualsGroup.add(dotMesh);
+      });
+
+      // C. 角色頭頂 3D 檢視標記看板 (Inspector Pin Billboard)
+      const canvas = document.createElement('canvas');
+      canvas.width = 256;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(4, 4, 248, 56, 28);
+        ctx.fill();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = r.data.color || '#38bdf8';
+        ctx.stroke();
+      } else {
+        ctx.fillRect(4, 4, 248, 56);
+      }
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 22px "Microsoft JhengHei", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`📍 ${r.data.name}`, 128, 32);
+
+      const pinTexture = new THREE.CanvasTexture(canvas);
+      pinTexture.needsUpdate = true;
+      const pinMat = new THREE.SpriteMaterial({ map: pinTexture, transparent: true, depthTest: false });
+      const pinSprite = new THREE.Sprite(pinMat);
+      pinSprite.position.set(0, 2.8, 0);
+      pinSprite.scale.set(2.8, 0.7, 1.0);
+      pinSprite.userData = { isInspectorPin: true };
+      r.char.group.add(pinSprite);
+      this.inspectorVisualsGroup.add(pinSprite);
+    });
+
+    // 2. 實體 Hank 跨島大巡邏路徑 (全島金色木橋航道)
+    if (this.touringHank && this.touringHank.islandKeys) {
+      this.touringHank.islandKeys.forEach((tId) => {
+        const wps = this.generateHankExcursionWaypoints(tId);
+        if (wps && wps.length > 1) {
+          const hankCurve = new THREE.CatmullRomCurve3(wps, false);
+          const hankPoints = hankCurve.getPoints(40);
+          const hankLineGeo = new THREE.BufferGeometry().setFromPoints(hankPoints);
+          const hankLineMat = new THREE.LineBasicMaterial({
+            color: 0xf59e0b,
+            linewidth: 3,
+            transparent: true,
+            opacity: 0.85
+          });
+          const hankLine = new THREE.Line(hankLineGeo, hankLineMat);
+          this.inspectorVisualsGroup.add(hankLine);
+        }
+      });
+    }
+
+    // 3. 物流送貨員航道
+    this.couriers.forEach((c) => {
+      const pts = [c.startPos, c.endPos];
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const mat = new THREE.LineDashedMaterial({
+        color: 0x38bdf8,
+        dashSize: 1.0,
+        gapSize: 0.5,
+        transparent: true,
+        opacity: 0.6
+      });
+      const line = new THREE.Line(geo, mat);
+      line.computeLineDistances();
+      this.inspectorVisualsGroup.add(line);
+    });
+  }
+
+  // 切換 3D 路徑檢視模式
+  setInspectorMode(enabled) {
+    this.isInspectorMode = enabled;
+    if (enabled && this.inspectorVisualsGroup.children.length === 0) {
+      this.buildInspectorVisuals();
+    }
+    this.inspectorVisualsGroup.visible = enabled;
   }
 }
