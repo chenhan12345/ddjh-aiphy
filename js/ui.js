@@ -126,7 +126,7 @@ export class IslandUI {
         <div class="progress-capsule" id="btn-open-progress" title="查看探索紀錄與接關碼">
           <div>
             <div style="font-size: 0.72rem; color: var(--muted); font-weight: 700;">群島修業進度</div>
-            <div style="font-size: 0.88rem; font-weight: 800;" id="hud-progress-text">0 / 7 島完成</div>
+            <div style="font-size: 0.88rem; font-weight: 800;" id="hud-progress-text">0 / 8 島完成</div>
           </div>
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill" id="hud-progress-fill"></div>
@@ -653,7 +653,7 @@ export class IslandUI {
           contentHtml += `
             <div class="info-section-card">
               <h3>${sec.title}</h3>
-              <p style="white-space: pre-line;">${sec.text}</p>
+              <p style="white-space: pre-line;">${sec.text || (sec.points ? "• " + sec.points.join("\n• ") : "")}</p>
             </div>
           `;
         });

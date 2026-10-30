@@ -313,7 +313,7 @@ export class LivingWorld {
     group.position.copy(centerPos);
 
     // 規劃跨島巡島航線清單 (環島 6 座外圍島嶼巡視)
-    const islandKeys = ['island-01', 'island-02', 'island-03', 'island-04', 'island-05', 'island-06'];
+    const islandKeys = this.data.islands.map(i => i.id);
 
     return {
       data: hankData,
@@ -527,7 +527,7 @@ export class LivingWorld {
 
   // 建造每座島海灘上的可拾取貝殼 (Clickable Beach Shells)
   buildBeachShells() {
-    const islandKeys = ['island-center', 'island-01', 'island-02', 'island-03', 'island-04', 'island-05', 'island-06'];
+    const islandKeys = ['island-center', ...this.data.islands.map(i => i.id)];
 
     islandKeys.forEach((key, idx) => {
       const pos = this.islandWorld.islandPositions[key];

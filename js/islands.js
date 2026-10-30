@@ -422,24 +422,126 @@ export class IslandWorld {
       }
 
       case 'island-06': {
-        // 光影幻境探索島：七彩分光三稜鏡晶塔、旋轉折射光環與大理石光學實驗基座
+        // 聲波迴響共鳴島：巨大黃金共鳴音叉 + 動態同心擴散聲波環 + 聲學頻率水晶
+        const acousticGroup = new THREE.Group();
+
+        // A. 聲納共鳴石階基座 (Resonance Base)
+        const baseGeo = new THREE.CylinderGeometry(3.0, 3.4, 1.4, 16);
+        const baseMesh = new THREE.Mesh(baseGeo, this.materials.wallWhite);
+        baseMesh.position.y = 0.7;
+        baseMesh.castShadow = true;
+        acousticGroup.add(baseMesh);
+
+        // 刻度金屬環 (Acoustic Dial Ring)
+        const dialGeo = new THREE.TorusGeometry(2.5, 0.1, 8, 32);
+        dialGeo.rotateX(Math.PI / 2);
+        const dialMesh = new THREE.Mesh(dialGeo, this.materials.gold);
+        dialMesh.position.y = 1.45;
+        acousticGroup.add(dialMesh);
+
+        // B. 巨型黃金共鳴音叉 (Giant Golden Tuning Fork)
+        const forkGroup = new THREE.Group();
+        forkGroup.position.y = 1.4;
+
+        // 1. 音叉底柄 (Stem)
+        const stemGeo = new THREE.CylinderGeometry(0.35, 0.4, 2.0, 12);
+        const stemMesh = new THREE.Mesh(stemGeo, this.materials.gold);
+        stemMesh.position.y = 1.0;
+        stemMesh.castShadow = true;
+        forkGroup.add(stemMesh);
+
+        // 2. 音叉橫樑 (Crossbar)
+        const crossGeo = new THREE.BoxGeometry(2.5, 0.5, 0.6);
+        const crossMesh = new THREE.Mesh(crossGeo, this.materials.gold);
+        crossMesh.position.y = 2.0;
+        crossMesh.castShadow = true;
+        forkGroup.add(crossMesh);
+
+        // 3. 雙平行叉齒 (Twin Parallel Prongs)
+        const prongGeo = new THREE.BoxGeometry(0.38, 4.4, 0.45);
+        const leftProng = new THREE.Mesh(prongGeo, this.materials.gold);
+        leftProng.position.set(-0.95, 4.2, 0);
+        leftProng.castShadow = true;
+        forkGroup.add(leftProng);
+
+        const rightProng = new THREE.Mesh(prongGeo, this.materials.gold);
+        rightProng.position.set(0.95, 4.2, 0);
+        rightProng.castShadow = true;
+        forkGroup.add(rightProng);
+
+        acousticGroup.add(forkGroup);
+
+        // C. 動態同心擴散聲波環 (Concentric Acoustic Sound Wave Rings)
+        const waveCount = 3;
+        const waveRings = [];
+        for (let i = 0; i < waveCount; i++) {
+          const waveGeo = new THREE.TorusGeometry(1.6, 0.08, 8, 32);
+          waveGeo.rotateX(Math.PI / 2);
+          const waveMat = new THREE.MeshBasicMaterial({
+            color: i === 0 ? 0x38bdf8 : (i === 1 ? 0x06b6d4 : 0xf59e0b),
+            transparent: true,
+            opacity: 0.8
+          });
+          const waveMesh = new THREE.Mesh(waveGeo, waveMat);
+          waveMesh.position.y = 5.4;
+          acousticGroup.add(waveMesh);
+          waveRings.push({
+            mesh: waveMesh,
+            phase: (i / waveCount) * Math.PI * 2
+          });
+        }
+
+        // D. 懸浮共鳴頻率水晶 (Floating Resonance Frequency Crystal)
+        const crystalGeo = new THREE.OctahedronGeometry(0.8, 0);
+        const crystalMat = new THREE.MeshStandardMaterial({
+          color: 0x38bdf8,
+          emissive: 0x0284c7,
+          emissiveIntensity: 0.7,
+          metalness: 0.85,
+          roughness: 0.15
+        });
+        const crystalMesh = new THREE.Mesh(crystalGeo, crystalMat);
+        crystalMesh.position.set(0, 5.4, 0);
+        acousticGroup.add(crystalMesh);
+
+        // 動畫：聲波向外擴散縮放、水晶共鳴微震與音叉緩慢微轉
+        this.animatedObjects.push((delta, time) => {
+          forkGroup.rotation.y = Math.sin(time * 0.8) * 0.15;
+          crystalMesh.rotation.y += delta * 1.5;
+          crystalMesh.rotation.z += delta * 0.8;
+          crystalMesh.position.y = 5.4 + Math.sin(time * 4.0) * 0.15;
+
+          waveRings.forEach((w, idx) => {
+            const progress = (time * 1.2 + idx * 0.8) % 2.5;
+            const scale = 1.0 + progress * 1.8;
+            w.mesh.scale.set(scale, scale, scale);
+            w.mesh.material.opacity = Math.max(0, 0.85 * (1.0 - progress / 2.5));
+          });
+        });
+
+        group.add(acousticGroup);
+        break;
+      }
+
+      case 'island-07': {
+        // 光影幻境探索島：七彩三角分光稜鏡、光譜光環與羅馬大理石座
         const prismGroup = new THREE.Group();
 
-        // A. 白色圓形光學實驗台座
+        // A. 羅馬圓形大理石基座
         const pedestalGeo = new THREE.CylinderGeometry(2.8, 3.2, 1.6, 12);
         const pedestal = new THREE.Mesh(pedestalGeo, this.materials.wallWhite);
         pedestal.position.y = 0.8;
         pedestal.castShadow = true;
         prismGroup.add(pedestal);
 
-        // 台座上的金色光學刻度環
+        // 基座雕花金環
         const dialGeo = new THREE.TorusGeometry(2.2, 0.1, 8, 24);
         dialGeo.rotateX(Math.PI / 2);
         const dialMesh = new THREE.Mesh(dialGeo, this.materials.gold);
         dialMesh.position.y = 1.65;
         prismGroup.add(dialMesh);
 
-        // B. 巨型透明光學三稜鏡 (Triangular Prism)
+        // B. 三角分光稜鏡 (Triangular Prism)
         const prismGeo = new THREE.CylinderGeometry(1.6, 1.6, 3.8, 3);
         const prismMat = new THREE.MeshPhysicalMaterial({
           color: 0xe0f2fe,
@@ -455,7 +557,7 @@ export class IslandWorld {
         prismMesh.castShadow = true;
         prismGroup.add(prismMesh);
 
-        // C. 圍繞三稜鏡的七彩光譜光環 (Rainbow Spectral Rings)
+        // C. 環繞三角稜鏡的七彩光譜光環 (Rainbow Spectral Rings)
         const rainbowColors = [0xef4444, 0xf97316, 0xeab308, 0x10b981, 0x06b6d4, 0x3b82f6, 0x8b5cf6];
         const spectralRings = [];
         rainbowColors.forEach((col, i) => {
@@ -468,7 +570,7 @@ export class IslandWorld {
           spectralRings.push({ mesh: ring, speed: (i % 2 === 0 ? 1 : -1) * (0.8 + i * 0.2) });
         });
 
-        // D. 頂部懸浮折射聚光水晶 (Floating Focal Crystal)
+        // D. 浮動光學焦點晶體 (Floating Focal Crystal)
         const focalGeo = new THREE.OctahedronGeometry(1.0, 0);
         const focalMat = new THREE.MeshStandardMaterial({
           color: 0x38bdf8,
@@ -481,7 +583,7 @@ export class IslandWorld {
         focalMesh.position.y = 6.6;
         prismGroup.add(focalMesh);
 
-        // 動畫：三稜鏡旋轉、七彩色環反向旋轉、頂部水晶上下懸浮呼吸
+        // 動畫：三稜鏡旋轉、七彩環反向公轉、上下懸浮浮動特效
         this.animatedObjects.push((delta, time) => {
           prismMesh.rotation.y += delta * 0.8;
           focalMesh.rotation.y -= delta * 1.2;

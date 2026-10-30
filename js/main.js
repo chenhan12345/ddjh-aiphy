@@ -5,9 +5,9 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { IslandWorld } from './islands.js?v=2.5';
-import { LivingWorld } from './living-world.js?v=2.5';
-import { IslandUI } from './ui.js?v=2.5';
+import { IslandWorld } from './islands.js?v=2.6';
+import { LivingWorld } from './living-world.js?v=2.6';
+import { IslandUI } from './ui.js?v=2.6';
 
 class App {
   constructor() {
