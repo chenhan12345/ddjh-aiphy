@@ -700,7 +700,7 @@ export class IslandUI {
         contentHtml += `
           <div>
             <a href="${this.activeIsland.link}" target="_blank" rel="noopener noreferrer" class="external-link-btn">
-              🔗 前往系統官方登入入口 ➔
+              ${this.activeIsland.group === '自然教學' ? '🔗 前往系統官方學習入口 ➔' : '🔗 前往系統官方登入入口 ➔'}
             </a>
           </div>
         `;
